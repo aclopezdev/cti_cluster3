@@ -17,7 +17,13 @@ class MysqlDB
         if($this->_conf == null) return;
 
         $this->_conn = new mysqli($this->_conf['host'], $this->_conf['user'], $this->_conf['pass']);
-        var_dump($this->_conn);
+    }
+
+    function query($query)
+    {
+        if($this->_conn == null) return;
+
+        
     }
 }
 
