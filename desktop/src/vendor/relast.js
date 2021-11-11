@@ -51,11 +51,18 @@ const Rapp = new Class(
             if(!this._bbox) return;
             if(!this._self) return;
             if(!this._self.draw) return;
+            this._bbox.innerHTML = '';
             
             this._self.draw(this._props);
 
             const doms = this.print(this._dom.main);
-            this._bbox.appendChild(doms.visual);
+            this.set_bbox_classes(doms);
+            for(let c in doms.visual.childNodes)
+            {
+                if(!doms.visual.childNodes.hasOwnProperty(c)) continue;
+                const child = doms.visual.childNodes[c];
+                this._bbox.appendChild(child);
+            }
 
             this.update_states();
             if(this._self.run)
@@ -86,15 +93,19 @@ const Rapp = new Class(
                         has_childs_buffer2.push(aux2);
                     }
                     aux = aux.nextSibling;
-                    aux2 = aux2.nextSibling;
+                    if(aux2)
+                        aux2 = aux2.nextSibling;
                 }
                 if(has_childs_buffer.length === 0) break;
                 
                 aux = has_childs_buffer[0].childNodes[0];
                 has_childs_buffer.splice(0, 1);
 
-                aux2 = has_childs_buffer2[0].childNodes[0];
-                has_childs_buffer2.splice(0, 1);
+                if(has_childs_buffer2[0])
+                {
+                    aux2 = has_childs_buffer2[0].childNodes[0];
+                    has_childs_buffer2.splice(0, 1);
+                }
             }
             
             return {virtual: vir_dom, visual: vis_dom};
@@ -112,7 +123,14 @@ const Rapp = new Class(
                 for(let a of attrs)
                 {
                     if(a.name === 'id')
+                    {
                         this._wrappers.ids[a.value] = node;
+                        if(this._comps[a.value] !== null || this._comps[a.value] !== undefined)
+                        {
+                            this._comps[a.value]._bbox = this._comps[a.value].eval_bbox(node);
+                            this._comps[a.value].render();
+                        }
+                    }
 
                     if(a.name === 'state')
                         this.index_state(a.value.trim(), node, base_node, 'attr', token, {attr: a.name});
@@ -149,7 +167,11 @@ const Rapp = new Class(
                 }
                 for(let a of attrs)
                 {
-                    if(a.name !== 'class' && a.name !== 'href')
+                    if(a.name !== 'class' && 
+                        a.name !== 'href' && 
+                        a.name !== 'type' && 
+                        a.name !== 'value'
+                    )
                         node.removeAttributeNode(a);
                 }
 
@@ -157,6 +179,35 @@ const Rapp = new Class(
             {
                 if(!this.has_textual_state(node.nodeValue)) return;
                 this.index_textual_states(node, base_node, 'text', node.nodeValue, token);
+            }
+        },
+        set_bbox_classes: function(doms)
+        {
+            if(this._bbox.hasAttribute('class'))
+            {
+                let classes = '';
+                for(let cl of this._bbox.classList)
+                    classes += `${this._name}-${cl}`;
+                this._bbox.setAttribute('class', `${this._name}-main ${classes}`);
+            }else
+            {
+                this._bbox.setAttribute('class', `${this._name}-main`);
+            }
+            this.set_bbox_classes_node(doms.visual);
+        },
+        set_bbox_classes_node: function(root)
+        {
+            for(let c in root.childNodes)
+            {
+                if(!root.childNodes.hasOwnProperty(c)) continue;
+                const child = root.childNodes[c];
+                if(child.hasAttribute('class'))
+                {
+                    let classes = '';
+                    for(let cl of child.classList)
+                        classes += `${this._name}-${cl}`;
+                    child.setAttribute('class', `${this._name}-main ${classes}`);
+                }
             }
         },
         has_events_listener: function(v)
@@ -337,6 +388,35 @@ const Rapp = new Class(
             if(k.trim() == '') return;
             if(this._actions[k])
                 this._actions[k](args);
+        },
+        add_comp: function(k, comp, css_file='')
+        {
+            if(!k || !comp) return;
+            if(typeof(k) !== 'string') return;
+            if(typeof(comp) !== 'function') return;
+            const args = {
+                name: k,
+                electron: this._electron,
+                parent: this
+            }
+            this._comps[k] = new comp(args);
+            if(this._comps[k].start)
+                this._comps[k].start();
+            if(css_file.trim() !== '')
+                this.load_css(css_file);
+            return this;
+        },
+        load_css: function(file)
+        {
+            if(!file) return;
+            if(typeof(file) !== 'string') return;
+
+            const tag = document.createElement('link');
+            tag.setAttribute('rel', 'stylesheet');
+            tag.href = `app/${file}`;
+            document.head.appendChild(tag);
+
+            return this;
         }
     }
 );
