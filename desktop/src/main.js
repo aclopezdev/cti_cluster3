@@ -27,7 +27,7 @@ function createWindow () {
         }
     });
 
-    win.loadFile('src/index.html').then(()=>
+    win.loadFile(`src/index.html`).then(()=>
     {
         win.setTitle(process.env.TITLE || 'Project-Template');
     });

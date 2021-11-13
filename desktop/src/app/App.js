@@ -1,5 +1,6 @@
+const session = require('./components/session/index').Session;
 const login = require('./components/login/index').Login;
-const signup = require('./components/signup/index').Signup;
+const main = require('./view/templates/default/index').Default;
 
 exports.App = new Class(
     {
@@ -8,8 +9,9 @@ exports.App = new Class(
         {
             this.parent(args, this);
 
+            this.add_comp('Session', session);
             this.add_comp('Login', login, 'components/login/main.css');
-            this.add_comp('Signup', signup, 'components/signup/main.css');
+            this.add_comp('Template', main, 'view/templates/default/main.css');
         },
         run: function(props)
         {
@@ -17,6 +19,7 @@ exports.App = new Class(
         },
         states: function(props)
         {
+            this.state('logged', false);
         },
         actions: function(props)
         {
@@ -25,11 +28,18 @@ exports.App = new Class(
         {
             //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
 
+            this._dom.no_logged = (
+                `<section id='Login'></section>`
+            );
+
+            this._dom.logged = (
+                `<section id='Template'></section>`
+            );
+
             this._dom.main = (
                 `<section>
-                    <h1>Hello App</h1>
-                    <section id='Login'></section>
-                    <section id='Signup'></section>
+                    <div id='Session'></div>
+                    <div if='[logged === true:logged:no_logged]'></div>
                 </section>`
             );
         }
