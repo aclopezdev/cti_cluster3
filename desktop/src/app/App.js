@@ -9,9 +9,9 @@ exports.App = new Class(
         {
             this.parent(args, this);
 
-            this.add_comp('Session', session);
-            this.add_comp('Login', login, 'components/login/main.css');
-            this.add_comp('Template', main, 'view/templates/default/main.css');
+            this.add_comp('Session', session, {props:{response: 'session_response'}});
+            this.add_comp('Login', login, {css: 'components/login/main.css', props: {response: 'session_response', Session:'Session'}});
+            this.add_comp('Template', main, {css: 'view/templates/default/main.css', props:{Session:'Session'}});
         },
         run: function(props)
         {
@@ -23,6 +23,10 @@ exports.App = new Class(
         },
         actions: function(props)
         {
+            this.action('session_response', (args)=>
+            {
+                this.state('logged', args);
+            });
         },
         draw: function(props)
         {

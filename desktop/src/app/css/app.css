@@ -1,1 +1,48 @@
+html, body
+{
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
+button
+{
+    background-color: #DDD;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover
+{
+    background-color: #EEE;
+}
+
+.dflex
+{
+    display: flex;
+}
+.dflex-wrap
+{
+    flex-wrap: wrap;
+}
+.dflex-nowrap
+{
+    flex-wrap: nowrap;
+}
+.justifyc-center
+{
+    justify-content: center;
+}
+
+.btn-link
+{
+    background-color: transparent;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}

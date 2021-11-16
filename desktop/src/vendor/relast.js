@@ -4,6 +4,7 @@ const Rapp = new Class(
     {
         _id: '',
         _name: '',
+        _visible: true,
         _bbox: null,
         _electron: null,
         _main: null,
@@ -23,6 +24,33 @@ const Rapp = new Class(
             this._self = self;
             this._parent = args.parent || self;
             this._main = args.main || this._parent || self; 
+            this._visible = args.visible || this._visible;
+        },
+        get_comp: function(k)
+        {
+            if(!k) return;
+            if(typeof(k) !== 'string') return;
+            if(this._comps[k])
+                if(this._comps[k]._visible)
+                    return this._comps[k];
+            return null;
+        },
+        looking_comp: function(path)
+        {
+            if(!path) return;
+            if(typeof(path) !== 'string') return;
+
+            const split_path = path.split('/');
+            let aux = this._main;
+            for(let comp of split_path)
+            {
+                if(aux._comps[comp])
+                {
+                    aux = aux._comps[comp];
+                }else
+                    continue;
+            }
+            return aux._visible ? aux : null;
         },
         eval_bbox: (bbox) =>
         {
@@ -62,6 +90,16 @@ const Rapp = new Class(
                 if(!doms.visual.childNodes.hasOwnProperty(c)) continue;
                 const child = doms.visual.childNodes[c];
                 this._bbox.appendChild(child);
+            }
+
+            if(this._dom.style)
+            {
+                if(this._dom.style.trim() !== '')
+                {
+                    const style_node = document.createElement('div');
+                    style_node.innerHTML = this._dom.style;
+                    this._bbox.appendChild(style_node);
+                }
             }
 
             this.update_states();
@@ -107,7 +145,6 @@ const Rapp = new Class(
                     has_childs_buffer2.splice(0, 1);
                 }
             }
-            
             return {virtual: vir_dom, visual: vis_dom};
         },
         check_node: function(node, base_node)
@@ -168,11 +205,14 @@ const Rapp = new Class(
                 for(let a of attrs)
                 {
                     if(a.name !== 'class' && 
+                        a.name !== 'classComp' && 
                         a.name !== 'href' && 
                         a.name !== 'type' && 
                         a.name !== 'value'
                     )
+                    {
                         node.removeAttributeNode(a);
+                    }
                 }
 
             }else if(node.nodeType === 3)
@@ -183,16 +223,26 @@ const Rapp = new Class(
         },
         set_bbox_classes: function(doms)
         {
-            if(this._bbox.hasAttribute('class'))
+            if(this._bbox.hasAttribute('class') || this._bbox.hasAttribute('classComp'))
             {
                 let classes = '';
-                for(let cl of this._bbox.classList)
-                    classes += `${this._name}-${cl}`;
+                if(this._bbox.hasAttribute('classComp'))
+                {
+                    const val = this._bbox.getAttribute('classComp').split(' ');
+                    for(let cl of val)
+                        classes += `${this._parent._name}-${cl}`;
+                }
+
+                if(this._bbox.hasAttribute('class'))
+                    for(let cl of this._bbox.classList)
+                        classes += `${cl} `;
+                        
                 this._bbox.setAttribute('class', `${this._name}-main ${classes}`);
             }else
             {
                 this._bbox.setAttribute('class', `${this._name}-main`);
             }
+            this._bbox.removeAttribute('classComp');
             this.set_bbox_classes_node(doms.visual);
         },
         set_bbox_classes_node: function(root)
@@ -201,13 +251,22 @@ const Rapp = new Class(
             {
                 if(!root.childNodes.hasOwnProperty(c)) continue;
                 const child = root.childNodes[c];
+                let classes = '';
+                if(child.hasAttribute('classComp'))
+                {
+                    const val = child.getAttribute('classComp').split(' ');
+                    for(let cl of val)
+                        if(child.hasAttribute('classComp'))
+                            classes += `${this._parent._name}-${cl}`;
+                }
                 if(child.hasAttribute('class'))
                 {
-                    let classes = '';
                     for(let cl of child.classList)
-                        classes += `${this._name}-${cl}`;
-                    child.setAttribute('class', `${this._name}-main ${classes}`);
+                        if(child.hasAttribute('classComp'))
+                            classes += `${cl} `;
                 }
+                child.setAttribute('class', `${this._name}-main ${classes}`);
+                child.removeAttribute('classComp');
             }
         },
         has_events_listener: function(v)
@@ -364,15 +423,17 @@ const Rapp = new Class(
                 }else if(data.type === 'foreach')
                 {
                     const doms = this.print(value);
-                    console.log(doms.visual);
-                    const buffer = [];
-                    for(let i = 0; i < doms.visual.childNodes.length; i++)
+                    if(doms)
                     {
-                        const item = doms.visual.childNodes[i];
-                        buffer.push(item);
+                        const buffer = [];
+                        for(let i = 0; i < doms.visual.childNodes.length; i++)
+                        {
+                            const item = doms.visual.childNodes[i];
+                            buffer.push(item);
+                        }
+                        for(let c of buffer)
+                            data.final_node.appendChild(c);
                     }
-                    for(let c of buffer)
-                        data.final_node.appendChild(c);
                 }
             }
         },
@@ -389,7 +450,16 @@ const Rapp = new Class(
             if(this._actions[k])
                 this._actions[k](args);
         },
-        add_comp: function(k, comp, css_file='')
+        call_extAction: function(path, action, args={})
+        {
+            if(!path || !action) return;
+            if(typeof(path) !== 'string' || typeof(action) !== 'string') return;
+
+            const comp = this.looking_comp(path);
+            if(comp)
+                comp.call_action(action, args);
+        },
+        add_comp: function(k, comp, options={})
         {
             if(!k || !comp) return;
             if(typeof(k) !== 'string') return;
@@ -398,14 +468,19 @@ const Rapp = new Class(
                 name: k,
                 electron: this._electron,
                 parent: this,
-                main: this._main
+                main: this._main,
+                visible: true
             }
+            if(options.visible !== undefined || options.visible !== null)
+                args.visible = options.visible;
+            const props = options.props || {};
             this._comps[k] = new comp(args);
             this._comps[k]._self = this._comps[k];
             if(this._comps[k].start)
-                this._comps[k].start();
-            if(css_file.trim() !== '')
-                this.load_css(css_file);
+                this._comps[k].start(props);
+            if(options.css)
+                if(options.css.trim() !== '')
+                    this.load_css(options.css);
             return this;
         },
         load_css: function(file)

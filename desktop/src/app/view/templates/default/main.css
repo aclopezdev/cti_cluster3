@@ -1,0 +1,39 @@
+.Template-header
+{
+    padding: 5px 0px;
+}
+.Template-header > section > h1
+{
+    margin: 5px;
+    flex-grow: 3;
+}
+.Template-header > section .notif-items
+{
+    padding: 5px;
+    flex-grow: 1;
+}
+
+
+
+.Template-main .body-panel
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Template-main-menu
+{
+    min-width: 160px;
+    max-width: 200px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.Template-main-menu button
+{
+    width: calc(100% - 10px);
+}
+
+.Template-body
+{
+    flex-grow: 2;
+}
