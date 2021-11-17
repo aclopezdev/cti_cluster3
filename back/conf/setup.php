@@ -9,12 +9,19 @@ $_conf['session']['user'] = '';
 $_conf['session']['token'] = '';
 
 
-$_main_db = array(
+$_local_db = array(
     'host' => '127.0.0.1',
     'port' => '3306',
     'user' => 'root',
     'pass' => '',
     'db' => 'cti_ecom'
+);
+$_remote_db = array(
+    'host' => '50.31.174.101',
+    'port' => '3306',
+    'user' => 'biiilbgf_andrescamilo',
+    'pass' => ',V!QDGC3+696',
+    'db' => 'biiilbgf_cti_ecom'
 );
 
 ?>
