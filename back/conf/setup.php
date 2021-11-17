@@ -9,11 +9,12 @@ $_conf['session']['user'] = '';
 $_conf['session']['token'] = '';
 
 
-$_db_conf = array();
-$_db_conf['host'] = '127.0.0.1';
-$_db_conf['port'] = '';
-$_db_conf['user'] = 'root';
-$_db_conf['pass'] = '';
-$_db_conf['db'] = 'ecom_proj';
+$_main_db = array(
+    'host' => '127.0.0.1',
+    'port' => '3306',
+    'user' => 'root',
+    'pass' => '',
+    'db' => 'cti_ecom'
+);
 
 ?>

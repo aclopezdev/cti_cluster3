@@ -1,6 +1,6 @@
 <?php
 
-$_conf['db'] = new MysqlDB($_db_conf);
+$_conf['db'] = new MysqlDB($_main_db);
 $_conf['db']->connect();
 
 ?>

@@ -16,9 +16,35 @@ const MyAPI =
                 cback({error: true});
         });
     },
-    login: (args)=>
+    signup: (args, cback) =>
     {
-        console.log(args);
+        MyNet.fetch('session', 'signup', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        }, {
+        });
+    },
+    login: (args, cback)=>
+    {
+        MyNet.fetch('session', 'login', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        }, {
+            user: args.email,
+            pass: args.password
+        });
     }
 }
 
