@@ -1,4 +1,4 @@
-exports.Body = new Class(
+exports.Dashboard = new Class(
     {
         Extends: Rapp,
         initialize: function(args)
@@ -11,14 +11,10 @@ exports.Body = new Class(
         },
         states: function(props)
         {
-            this.state('title', '');
+            this.state('aaa', 11);
         },
         actions: function(props)
         {
-            this.action('set_title', (args)=>
-            {
-                this.state('title', args);
-            });
         },
         draw: function(props)
         {
@@ -26,8 +22,7 @@ exports.Body = new Class(
 
             this._dom.main = (
                 `<section>
-                    <h1 class='title'>[state:title]</h1>
-                    <section id='Body-content'></section>
+                    <h1>Hello Dashboard [state:aaa]</h1>
                 </section>`
             );
         }

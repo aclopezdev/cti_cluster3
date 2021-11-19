@@ -1,4 +1,4 @@
-exports.Body = new Class(
+exports.Products = new Class(
     {
         Extends: Rapp,
         initialize: function(args)
@@ -11,24 +11,16 @@ exports.Body = new Class(
         },
         states: function(props)
         {
-            this.state('title', '');
         },
         actions: function(props)
         {
-            this.action('set_title', (args)=>
-            {
-                this.state('title', args);
-            });
         },
         draw: function(props)
         {
             //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
 
             this._dom.main = (
-                `<section>
-                    <h1 class='title'>[state:title]</h1>
-                    <section id='Body-content'></section>
-                </section>`
+                `<section>hello 1</section>`
             );
         }
     }

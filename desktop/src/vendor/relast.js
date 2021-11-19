@@ -16,6 +16,7 @@ const Rapp = new Class(
         _actions: {},
         _wrappers: {ids: {}, indexers: {}},
         _dom: { main: ``, iterator: {} },
+        _nav: {},
         initialize: function(args, self)
         {
             this._name = args.name;
@@ -25,6 +26,15 @@ const Rapp = new Class(
             this._parent = args.parent || self;
             this._main = args.main || this._parent || self; 
             this._visible = args.visible || this._visible;
+
+            if(this._main === this)
+                this._nav['/'] = { mod: this._self, title: '', name: '' };
+        },
+        get_DOM_id: function(id)
+        {
+            if(!id) return null;
+            if(typeof(id) !== 'string') return null;
+            return this._wrappers.ids[id];
         },
         get_comp: function(k)
         {
@@ -51,6 +61,28 @@ const Rapp = new Class(
                     continue;
             }
             return aux._visible ? aux : null;
+        },
+        set_nav: function(path, conf, options={})
+        {
+            this._main._nav[path] = { path: path,  mod: conf.mod, title: conf.title, name: conf.name };
+        },
+        navigate: function(path, bbox, options={})
+        {
+            if(!path || !bbox) return;
+            if(typeof(path) !== 'string') return;
+            bbox = typeof(bbox) === 'string' ? this._wrappers.ids[bbox] : bbox;
+            if(!bbox) return;
+            const obj = this._main._nav[path];
+            if(!obj) return;
+            if(!this._main._comps[obj.name])
+            {
+                this._main.add_comp(obj.name, obj.mod, options);
+                if(!this._main._comps[obj.name]) return;
+                this._main._comps[obj.name]._bbox = bbox;
+                this._main._comps[obj.name].start(options);
+            }
+            this._main._comps[obj.name].render();
+            return obj;
         },
         eval_bbox: (bbox) =>
         {
@@ -162,7 +194,7 @@ const Rapp = new Class(
                     if(a.name === 'id')
                     {
                         this._wrappers.ids[a.value] = node;
-                        if(this._comps[a.value] !== null || this._comps[a.value] !== undefined)
+                        if(this._comps[a.value] !== null && this._comps[a.value] !== undefined)
                         {
                             this._comps[a.value]._bbox = this._comps[a.value].eval_bbox(node);
                             this._comps[a.value].render();
@@ -208,7 +240,8 @@ const Rapp = new Class(
                         a.name !== 'classComp' && 
                         a.name !== 'href' && 
                         a.name !== 'type' && 
-                        a.name !== 'value'
+                        a.name !== 'value' &&
+                        a.name !== 'src'
                     )
                     {
                         node.removeAttributeNode(a);
@@ -361,12 +394,15 @@ const Rapp = new Class(
                 const token = i;
                 const data = indexers[i];
                 let value = '';
-                if(data.type === 'text')
-                    value = data.base_node.nodeValue;
-                else if(data.type === 'text_attr')
-                    value = data.base_node.attributes[data.addons.attr].value;
-                else if(data.type === 'if' || data.type === 'foreach' || data.type === 'for'){
-                    data.final_node.innerHTML = '';
+                if(data.base_node)
+                {
+                    if(data.type === 'text')
+                        value = data.base_node.nodeValue;
+                    else if(data.type === 'text_attr')
+                        value = data.base_node.attributes[data.addons.attr].value;
+                    else if(data.type === 'if' || data.type === 'foreach' || data.type === 'for'){
+                        data.final_node.innerHTML = '';
+                    }
                 }
                 
                 for(let s of data.states)
@@ -461,7 +497,7 @@ const Rapp = new Class(
         },
         add_comp: function(k, comp, options={})
         {
-            if(!k || !comp) return;
+            if(!k && !comp) return;
             if(typeof(k) !== 'string') return;
             if(typeof(comp) !== 'function') return;
             const args = {

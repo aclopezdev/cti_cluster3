@@ -22,7 +22,6 @@ exports.Header = new Class(
             this._dom.main = (
                 `<section class='dflex dflex-wrap justifyc-center'>
                     <h1>Ecom</h1>
-                    <div class='notif-items'></div>
                 </section>`
             );
         }

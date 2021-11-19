@@ -24,6 +24,10 @@ exports.Main_menu = new Class(
         },
         actions: function(props)
         {
+            this.action('dashboard', ()=>{ this._parent.call_action('nav', '/dashboard') });
+            this.action('products', ()=>{ this._parent.call_action('nav', '/products') });
+            this.action('users', ()=>{ this._parent.call_action('nav', '/users') });
+            this.action('settings', ()=>{ this._parent.call_action('nav', '/settings') });
         },
         draw: function(props)
         {
@@ -31,13 +35,15 @@ exports.Main_menu = new Class(
 
             this._dom.main = (
                 `<section>
-                    <div>
-                        <p>[state:first_name] [state:last_name]</p>
-                        <p>[state:email]</p>
+                    <div class='menu-container'>
+                        <p class='user-name'>[state:first_name] [state:last_name]</p>
+                        <p class='user-email'>[state:email]</p>
                     </div>
-                    <div>
-                        <button>Dashboard</button>
-                        <button>Products</button>
+                    <div class='menu-container'>
+                        <button onclick='dashboard'>Dashboard</button>
+                        <button onclick='products'>Products</button>
+                        <button onclick='users'>Users</button>
+                        <button onclick='settings'>Settings</button>
                         <hr/>
                         <button class='btn-link'>Logout</button>
                     </div>
