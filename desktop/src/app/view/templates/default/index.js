@@ -17,7 +17,7 @@ exports.Default = new Class(
         run: function(props)
         {
             // THIS METHOD RUN WHEN THE RENDER FINISH
-            this.call_action('nav', '/dashboard');
+            this.call_action('nav', '/users');
         },
         states: function(props)
         {

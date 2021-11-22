@@ -128,8 +128,11 @@ const Rapp = new Class(
             {
                 if(this._dom.style.trim() !== '')
                 {
+                    let style = `<style>${this._dom.style}</style>`;
+                    if(this._dom.style.includes('<style>'))
+                        style = this._dom.style;
                     const style_node = document.createElement('div');
-                    style_node.innerHTML = this._dom.style;
+                    style_node.innerHTML = style;
                     this._bbox.appendChild(style_node);
                 }
             }
@@ -140,8 +143,11 @@ const Rapp = new Class(
         },
         print: function(html)
         {
-            const vir_dom = document.createElement('div');
-            const vis_dom = document.createElement('div');
+            let base = 'div';
+            if(html.substr(0, 3).trim() === '<td' || html.substr(0, 3).trim() === '<th')
+                base = 'tr';
+            const vir_dom = document.createElement(base);
+            const vis_dom = document.createElement(base);
             // html = html.replace(/(>)+[\s]+(<)+/g, '><');
             vir_dom.innerHTML = html;
             vis_dom.innerHTML = html;
@@ -200,6 +206,9 @@ const Rapp = new Class(
                             this._comps[a.value].render();
                         }
                     }
+
+                    if(a.name === 'key')
+                        node['key'] = a.value;
 
                     if(a.name === 'state')
                         this.index_state(a.value.trim(), node, base_node, 'attr', token, {attr: a.name});
@@ -424,6 +433,10 @@ const Rapp = new Class(
                             for(let i of buffer)
                             {
                                 let item = this._dom.iterator[data.addons.iterator];
+                                if(item.includes('foreach'))
+                                {
+                                    
+                                }
                                 for(let p in i)
                                 {
                                     if(!i.hasOwnProperty(p)) continue;
