@@ -8,10 +8,7 @@ exports.Session = new Class(
         run: function(props)
         {
             // THIS METHOD RUN WHEN THE RENDER FINISH
-            MyAPI.check_session((res)=>
-            {
-                this.call_action('set_session', res);
-            });
+            this.call_action('check_session');
         },
         states: function(props)
         {
@@ -19,6 +16,13 @@ exports.Session = new Class(
         },
         actions: function(props)
         {
+            this.action('check_session', ()=>
+            {
+                MyAPI.check_session((res)=>
+                {
+                    this.call_action('set_session', res);
+                });
+            });
             this.action('set_session', (args)=>
             {
                 let logged = false;
@@ -35,11 +39,12 @@ exports.Session = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-
-            this._dom.main = (
-                `<section></section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section></section>`
+                );
+            });
         }
     }
 );

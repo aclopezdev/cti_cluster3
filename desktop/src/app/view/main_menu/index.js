@@ -33,22 +33,25 @@ exports.Main_menu = new Class(
         {
             //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
 
-            this._dom.main = (
-                `<section>
-                    <div class='menu-container'>
-                        <p class='user-name'>[state:first_name] [state:last_name]</p>
-                        <p class='user-email'>[state:email]</p>
-                    </div>
-                    <div class='menu-container'>
-                        <button onclick='dashboard'>Dashboard</button>
-                        <button onclick='products'>Products</button>
-                        <button onclick='users'>Users</button>
-                        <button onclick='settings'>Settings</button>
-                        <hr/>
-                        <button class='btn-link'>Logout</button>
-                    </div>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section>
+                        <div class='menu-container'>
+                            <p class='user-name'>[state:first_name] [state:last_name]</p>
+                            <p class='user-email'>[state:email]</p>
+                        </div>
+                        <div class='menu-container'>
+                            <button onclick='dashboard'>Dashboard</button>
+                            <button onclick='products'>Products</button>
+                            <button onclick='users'>Users</button>
+                            <button onclick='settings'>Settings</button>
+                            <hr/>
+                            <button class='btn-link'>Logout</button>
+                        </div>
+                    </section>`
+                );
+            });
         }
     }
 );

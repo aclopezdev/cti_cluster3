@@ -22,16 +22,17 @@ exports.Body = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-
-            this._dom.main = (
-                `<section>
-                    <h1 class='title'>[state:title]</h1>
-                    <div class='content-bbox'>
-                        <section id='Body-content'></section>
-                    </div>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section>
+                        <h1 class='title'>[state:title]</h1>
+                        <div class='content-bbox'>
+                            <section id='Body-content'></section>
+                        </div>
+                    </section>`
+                );
+            });
         }
     }
 );

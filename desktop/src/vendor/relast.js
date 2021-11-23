@@ -4,45 +4,194 @@ const Rapp = new Class(
     {
         _id: '',
         _name: '',
-        _visible: true,
         _bbox: null,
         _electron: null,
+
         _main: null,
         _parent: null,
-        _self: null,
+
         _props: {},
         _comps: {},
         _states: {},
         _actions: {},
-        _wrappers: {ids: {}, indexers: {}},
-        _dom: { main: ``, iterator: {} },
-        _nav: {},
+        _dom: {},
+        _effects: [],
+        _wrappers: {indexers: {}, ids:{}},
+
+        _ran: false,
+
         initialize: function(args, self)
         {
             this._name = args.name;
-            this._bbox = this.eval_bbox(args.bbox);
+            this._bbox = typeof(args.bbox) === 'string' ? document.getElementById(args.bbox) : args.bbox;
             this._electron = args.electron;
-            this._self = self;
-            this._parent = args.parent || self;
-            this._main = args.main || this._parent || self; 
-            this._visible = args.visible || this._visible;
-
-            if(this._main === this)
-                this._nav['/'] = { mod: this._self, title: '', name: '' };
+            this._parent = args.parent || this;
+            this._main = args.main || this._parent;
         },
-        get_DOM_id: function(id)
+        start: function(props)
         {
-            if(!id) return null;
-            if(typeof(id) !== 'string') return null;
-            return this._wrappers.ids[id];
+            this._props = props;
+            if(this.draw)
+                this.draw(props);
+            if(this.states)
+                this.states(props);
+            if(this.actions)
+                this.actions(props);
+            return this;
+        },
+        render: function(args={})
+        {
+            const dom = args.dom || 'main';
+            let bbox = args.bbox || this._bbox;
+            if(!this._dom[dom]) return;
+            bbox = typeof(bbox) === 'string' ? document.getElementById(bbox) : bbox;
+            if(!bbox) return;
+
+            const dom_args = args.params || {};
+            const triggers = args.actions || [];
+            const triggers_args = args.args || {};
+            
+            if(dom.trim() !== '')
+                bbox.innerHTML = this.call_dom(dom, dom_args);
+            else{
+                bbox.innerHTML = '';
+                return;
+            }
+            this.check_block(bbox);
+            for(let t of triggers)
+                if(this._actions[t])
+                    this._actions[t](triggers_args);
+            
+            if(this._dom['style'])
+            {
+                let style = ``;
+                if(typeof(this._dom['style']) === 'function')
+                    style = this._dom['style']();
+                else
+                    style = this._dom['style'];
+                const dom_style = document.createElement('style');
+                dom_style.setAttribute('type', 'text/css');
+                dom_style.appendChild(document.createTextNode(style));
+                document.head.appendChild(dom_style);
+            }
+
+            if(args.response)
+                args.response(triggers_args);
+
+            if(!this._ran)
+            {
+                this._ran = true;
+                if(this.run)
+                    this.run(this._props);
+            }
+            if(bbox === this._bbox)
+                if(this.effect)
+                    this.effect(this._props);
+            this.update_states();
+        },
+        reset: function(bbox)
+        {
+            this.render({
+                dom: '',
+                bbox: bbox
+            });
+        },
+        dom: function(k, action)
+        {
+            if(!k || !action) return;
+            if(k.trim() == '') return;
+            this._dom[k] = action;
+        },
+        call_dom: function(k, args)
+        {
+            k = k || 'main';
+            if(k.trim() == '') return;
+            if(this._dom[k])
+                return this._dom[k](args);
+            return null;
+        },
+        state: function(k, v=null)
+        {
+            if(v === null)
+                return this._states[k];
+
+            this._states[k] = v;
+            this.update_states();
+        },
+        action: function(k, action)
+        {
+            if(!k || !action) return;
+            if(k.trim() == '') return;
+            this._actions[k] = action;
+        },
+        call_action: function(k, args)
+        {
+            if(!k) return;
+            if(k.trim() == '') return;
+            if(this._actions[k])
+                this._actions[k](args);
+        },
+        check_block: function(bbox)
+        {
+            bbox = bbox || this._bbox;
+            this.track_block(bbox);
+        },
+        track_block: function(node)
+        {
+            if(!node) return;
+            for(let c of node.childNodes)
+            {
+                this.check_node(c);
+                this.track_block(c);
+            }
+        },
+        check_node: function(node)
+        {
+            if(node.nodeType === 8) return null;
+            const token = Rapp.uuid();
+            if(node.nodeType === 3)
+            {
+                if(node.nodeValue.trim() === '') return;
+                if(!this.has_textual_state(node.nodeValue)) return;
+                this.index_textual_states(node, 'text', node.nodeValue, token);
+            }else if(node.nodeType === 1)
+            {
+                for(let a of node.attributes)
+                {
+                    if(a.name === 'id')
+                    {
+                        this._wrappers.ids[a.value] = node;
+                        const id = a.value.toUpperCase().trim();
+                        if(this._comps[id] !== null && this._comps[id] !== undefined)
+                        {
+                            this._comps[id]._bbox = node;
+                            this._comps[id].render();
+                        }
+                    }
+                    if(this.has_events_listener(`${a.name}='${a.value}'`))
+                    {
+                        const event = a.name.replace('on', '');
+                        const action = a.value.trim();
+                        node.addEventListener(event, (e)=>
+                        {
+                            if(node.tagName.toLowerCase() === 'form')
+                                e.preventDefault();
+                            this.call_action(action, {ev: e, target: e.target, node: node});
+                        });
+                    }
+                    if(this.has_textual_state(a.value))
+                    {
+                        this.index_textual_states(node, 'text_attr', a.value, token, {attr: a.name});
+                    }
+                }
+            }
         },
         get_comp: function(k)
         {
             if(!k) return;
             if(typeof(k) !== 'string') return;
-            if(this._comps[k])
-                if(this._comps[k]._visible)
-                    return this._comps[k];
+            if(this._comps[k.toUpperCase()])
+                return this._comps[k.toUpperCase()];
             return null;
         },
         looking_comp: function(path)
@@ -83,233 +232,6 @@ const Rapp = new Class(
             }
             this._main._comps[obj.name].render();
             return obj;
-        },
-        eval_bbox: (bbox) =>
-        {
-            if(bbox)
-                if(typeof(bbox) === 'string')
-                    return document.getElementById(bbox);
-                else if(typeof(bbox) === 'object')
-                    return bbox;
-            return null;
-        },
-        start: function(props)
-        {
-            if(this._self)
-            {
-                this._props = props;
-                if(this._self.states)
-                    this._self.states(props);
-                if(this._self.actions)
-                    this._self.actions(props);
-                return this._self;
-            }
-            return this;
-        },
-        render: function()
-        {
-            if(!this._bbox) return;
-            if(!this._self) return;
-            if(!this._self.draw) return;
-            this._bbox.innerHTML = '';
-            
-            this._self.draw(this._props);
-
-            const doms = this.print(this._dom.main);
-            this.set_bbox_classes(doms);
-            for(let c in doms.visual.childNodes)
-            {
-                if(!doms.visual.childNodes.hasOwnProperty(c)) continue;
-                const child = doms.visual.childNodes[c];
-                this._bbox.appendChild(child);
-            }
-
-            if(this._dom.style)
-            {
-                if(this._dom.style.trim() !== '')
-                {
-                    let style = `<style>${this._dom.style}</style>`;
-                    if(this._dom.style.includes('<style>'))
-                        style = this._dom.style;
-                    const style_node = document.createElement('div');
-                    style_node.innerHTML = style;
-                    this._bbox.appendChild(style_node);
-                }
-            }
-
-            this.update_states();
-            if(this._self.run)
-                this._self.run(this._props);
-        },
-        insert: function(k, bbox)
-        {
-            if(!bbox) return;
-            if(!k) return;
-            if(!this._dom[k]) return;
-
-            if(typeof(bbox) === 'string')
-            {
-                if(this._wrappers.indexers[bbox])
-                    bbox = this._wrappers.indexers[bbox];
-                else 
-                if(document.getElementById(bbox))
-                {
-                    console.log(document.getElementById(bbox));
-                    bbox = document.getElementById(bbox);
-                }
-            }
-            if(!bbox) return;
-            bbox.innerHTML = '';
-
-            const doms = this.print(this._dom[k]);
-            this.set_bbox_classes(doms);
-            for(let c in doms.visual.childNodes)
-            {
-                if(!doms.visual.childNodes.hasOwnProperty(c)) continue;
-                const child = doms.visual.childNodes[c];
-                bbox.appendChild(child);
-            }
-
-            if(this._dom.style)
-            {
-                if(this._dom.style.trim() !== '')
-                {
-                    let style = `<style>${this._dom.style}</style>`;
-                    if(this._dom.style.includes('<style>'))
-                        style = this._dom.style;
-                    const style_node = document.createElement('div');
-                    style_node.innerHTML = style;
-                    bbox.appendChild(style_node);
-                }
-            }
-
-            this.update_states();
-        },
-        print: function(html)
-        {
-            let base = 'div';
-            if(html.substr(0, 3).trim() === '<td' || html.substr(0, 3).trim() === '<th')
-                base = 'tr';
-            const vir_dom = document.createElement(base);
-            const vis_dom = document.createElement(base);
-            // html = html.replace(/(>)+[\s]+(<)+/g, '><');
-            vir_dom.innerHTML = html;
-            vis_dom.innerHTML = html;
-
-            if(!vir_dom.hasChildNodes()) return;
-
-            let aux = vis_dom.childNodes[0];
-            let aux2 = vir_dom.childNodes[0];
-            let has_childs_buffer = [];
-            let has_childs_buffer2 = [];
-            while(aux !== null && aux !== undefined)
-            {
-                while(aux !== null)
-                {
-                    this.check_node(aux, aux2);
-                    if(aux.hasChildNodes())
-                    {
-                        has_childs_buffer.push(aux);
-                        has_childs_buffer2.push(aux2);
-                    }
-                    aux = aux.nextSibling;
-                    if(aux2)
-                        aux2 = aux2.nextSibling;
-                }
-                if(has_childs_buffer.length === 0) break;
-                
-                aux = has_childs_buffer[0].childNodes[0];
-                has_childs_buffer.splice(0, 1);
-
-                if(has_childs_buffer2[0])
-                {
-                    aux2 = has_childs_buffer2[0].childNodes[0];
-                    has_childs_buffer2.splice(0, 1);
-                }
-            }
-            return {virtual: vir_dom, visual: vis_dom};
-        },
-        check_node: function(node, base_node)
-        {
-            if(!node) return null;
-            if(node.nodeType === 8) return null;
-
-            const token = Rapp.uuid();
-
-            if(node.nodeType === 1)
-            {
-                const attrs = node.attributes;
-                for(let a of attrs)
-                {
-                    if(a.name === 'id')
-                    {
-                        this._wrappers.ids[a.value] = node;
-                        if(this._comps[a.value] !== null && this._comps[a.value] !== undefined)
-                        {
-                            this._comps[a.value]._bbox = this._comps[a.value].eval_bbox(node);
-                            this._comps[a.value].render();
-                        }
-                    }
-
-                    if(a.name === 'key')
-                        node['key'] = a.value;
-
-                    if(a.name === 'state')
-                        this.index_state(a.value.trim(), node, base_node, 'attr', token, {attr: a.name});
-                    
-                    if(this.has_events_listener(`${a.name}='${a.value}'`))
-                    {
-                        const event = a.name.replace('on', '');
-                        const action = a.value.trim();
-                        node.addEventListener(event, (e)=>
-                        {
-                            if(node.tagName.toLowerCase() === 'form')
-                                e.preventDefault();
-                            this.call_action(action, {ev: e, target: e.target, node: node});
-                        });
-                    }
-                    if(this.has_textual_state(a.value))
-                        this.index_textual_states(node, base_node, 'text_attr', a.value, token, {attr: a.name});
-                    
-                    if(a.name.toLowerCase().trim() === 'if')
-                    {
-                        const cond = a.value.substr(1, a.value.length - 2).replace(/\s/g, '');
-                        const split = cond.split(':');
-                        let condition = split[0];
-                        this.index_conditional_states(node, base_node, 'if', split[0], token, {yes: split[1].trim(), no: split[2].trim()});
-                    }else if(a.name.toLowerCase().trim() === 'foreach')
-                    {
-                        const cond = a.value.substr(1, a.value.length - 2).replace(/\s/g, '');
-                        const split = cond.split(':');
-                        let condition = split[0];
-                        this.index_foreach_states(node, base_node, 'foreach', split[0], token, {iterator: split[1].trim()});
-                    }else if(a.name.toLowerCase().trim() === 'for')
-                    {
-                    }
-                }
-                for(let a of attrs)
-                {
-                    if(a.name !== 'class' && 
-                        a.name !== 'classComp' && 
-                        a.name !== 'href' && 
-                        a.name !== 'type' && 
-                        a.name !== 'value' &&
-                        a.name !== 'src' &&
-                        a.name !== 'style'
-                    )
-                    {
-                        if(jQuery)
-                            if(a.name === 'id')
-                                continue;
-                        node.removeAttributeNode(a);
-                    }
-                }
-
-            }else if(node.nodeType === 3)
-            {
-                if(!this.has_textual_state(node.nodeValue)) return;
-                this.index_textual_states(node, base_node, 'text', node.nodeValue, token);
-            }
         },
         set_bbox_classes: function(doms)
         {
@@ -388,60 +310,32 @@ const Rapp = new Class(
         {
             return v.replace('[state:', '').replace(']', '');
         },
-        index_state: function(state, node, base_node, type, token, addons={})
+        index_state: function(state, node, type, token, addons={})
         {
             if(!this._wrappers.indexers[token])
             {
-                console.log(node.parentNode);
+                const base_node = document.importNode(node);
                 this._wrappers.indexers[token] = {
                     final_node: node,
                     base_node: base_node,
                     type: type,
                     states: [],
-                    addons: addons
+                    addons: addons,
+                    state: state
                 }
             }
             if(!this._wrappers.indexers[token].states.includes(state))
                 this._wrappers.indexers[token].states.push(state);
         },
-        index_textual_states: function(node, base_node, type, value_eval, token, addons={})
+        index_textual_states: function(node, type, value_eval, token, addons={})
         {
             const states = this.get_textual_states(value_eval);
+            if(!states) return;
             for(let s of states)
             {
                 const state = this.extract_textual_state(s);
-                this.index_state(state, node, base_node, type, token, addons);
+                this.index_state(state, node, type, token, addons);
             }
-        },
-        index_conditional_states: function(node, base_node, type, condition, token, addons={})
-        {
-            for(let s in this._states)
-            {
-                const regexp = new RegExp(s.trim(), 'g');
-                if(condition.match(regexp) !== null)
-                {
-                    this.index_state(s.trim(), node, condition, type, token, addons);
-                }
-            }
-        },
-        index_foreach_states: function(node, base_node, type, condition, token, addons={})
-        {
-            for(let s in this._states)
-            {
-                const regexp = new RegExp(s.trim(), 'g');
-                if(condition.match(regexp) !== null)
-                {
-                    this.index_state(s.trim(), node, condition, type, token, addons);
-                }
-            }
-        },
-        state: function(k, v=null)
-        {
-            if(v === null)
-                return this._states[k];
-
-            this._states[k] = v;
-            this.update_states();
         },
         update_states: function() 
         {
@@ -456,46 +350,17 @@ const Rapp = new Class(
                 {
                     if(data.type === 'text')
                         value = data.base_node.nodeValue;
-                    else if(data.type === 'text_attr')
+                    else if(data.type === 'text_attr'){
                         value = data.base_node.attributes[data.addons.attr].value;
-                    else if(data.type === 'if' || data.type === 'foreach' || data.type === 'for'){
-                        data.final_node.innerHTML = '';
                     }
                 }
                 
                 for(let s of data.states)
                 {
-                    if(data.type === 'text' || data.type === 'text_attr')
+                    if(data.type === 'text' || data.type === 'text_attr'){
                         value = value.replace(`[state:${s}]`, this._states[s] !== undefined || this._states[s] !== null ? this._states[s] : '[no-value]');
-                    else if(data.type === 'attr')
+                    }else if(data.type === 'attr')
                         value = this._states[s] || '[no-value]';
-                    else if(data.type === 'if')
-                    {
-                        const regexp = new RegExp(s, 'g');
-                        value = data.base_node.replace(regexp, this._states[s]);
-                    }
-                    else if(data.type === 'foreach')
-                    {
-                        const buffer = this._states[s];
-                        if(typeof(buffer) === 'object' && Array.isArray(buffer))
-                        {
-                            for(let i of buffer)
-                            {
-                                let item = this._dom.iterator[data.addons.iterator];
-                                // if(item.includes('foreach'))
-                                // {
-                                    
-                                // }
-                                for(let p in i)
-                                {
-                                    if(!i.hasOwnProperty(p)) continue;
-                                    const regexp = new RegExp(`\\[${p}\\]`, 'g');
-                                    item = item.replace(regexp, i[p]);
-                                }
-                                value += item;
-                            }
-                        }
-                    }
                 }
 
                 
@@ -503,59 +368,13 @@ const Rapp = new Class(
                     data.final_node.nodeValue = value;
                 if(data.type === 'text_attr')
                 {
-                    if(data.final_node.attributes[data.addons.attr])
+                    if(data.final_node.attributes[data.addons.attr]){
                         data.final_node.attributes[data.addons.attr].value = value;
-                    else if(data.addons.attr.toLowerCase() === 'value')
+                    }else if(data.addons.attr.toLowerCase() === 'value')
                         data.final_node.value = value;
                 }else if(data.type === 'attr')
                     data.final_node.setAttribute(data.addons.attr, value);
-                else if(data.type === 'if')
-                {
-                    const result = eval(value) ? data.addons.yes : (data.addons.no ? data.addons.no : null);
-                    if(result)
-                    {
-                        const doms = this.print(this._dom[result]);
-                        for(let c of doms.visual.childNodes)
-                            data.final_node.appendChild(c);
-                    }
-                }else if(data.type === 'foreach')
-                {
-                    const doms = this.print(value);
-                    if(doms)
-                    {
-                        const buffer = [];
-                        for(let i = 0; i < doms.visual.childNodes.length; i++)
-                        {
-                            const item = doms.visual.childNodes[i];
-                            buffer.push(item);
-                        }
-                        for(let c of buffer)
-                            data.final_node.appendChild(c);
-                    }
-                }
             }
-        },
-        action: function(k, action)
-        {
-            if(!k || !action) return;
-            if(k.trim() == '') return;
-            this._actions[k] = action;
-        },
-        call_action: function(k, args)
-        {
-            if(!k) return;
-            if(k.trim() == '') return;
-            if(this._actions[k])
-                this._actions[k](args);
-        },
-        call_extAction: function(path, action, args={})
-        {
-            if(!path || !action) return;
-            if(typeof(path) !== 'string' || typeof(action) !== 'string') return;
-
-            const comp = this.looking_comp(path);
-            if(comp)
-                comp.call_action(action, args);
         },
         add_comp: function(k, comp, options={})
         {
@@ -572,10 +391,10 @@ const Rapp = new Class(
             if(options.visible !== undefined || options.visible !== null)
                 args.visible = options.visible;
             const props = options.props || {};
-            this._comps[k] = new comp(args);
-            this._comps[k]._self = this._comps[k];
-            if(this._comps[k].start)
-                this._comps[k].start(props);
+            this._comps[k.toUpperCase()] = new comp(args);
+            this._comps[k.toUpperCase()]._self = this._comps[k.toUpperCase()];
+            if(this._comps[k.toUpperCase()].start)
+                this._comps[k.toUpperCase()].start(props);
             if(options.css)
                 if(options.css.trim() !== '')
                     this.load_css(options.css);
@@ -596,6 +415,99 @@ const Rapp = new Class(
     }
 );
 
+
+        // call_extAction: function(path, action, args={})
+        // {
+        //     if(!path || !action) return;
+        //     if(typeof(path) !== 'string' || typeof(action) !== 'string') return;
+
+        //     const comp = this.looking_comp(path);
+        //     if(comp)
+        //         comp.call_action(action, args);
+        // },
+
+        // check_node: function(node, base_node)
+        // {
+        //     if(!node) return null;
+        //     if(node.nodeType === 8) return null;
+
+        //     const token = Rapp.uuid();
+
+        //     if(node.nodeType === 1)
+        //     {
+        //         const attrs = node.attributes;
+        //         for(let a of attrs)
+        //         {
+        //             if(a.name === 'id')
+        //             {
+        //                 this._wrappers.ids[a.value] = node;
+        //                 if(this._comps[a.value] !== null && this._comps[a.value] !== undefined)
+        //                 {
+        //                     this._comps[a.value]._bbox = this._comps[a.value].eval_bbox(node);
+        //                     this._comps[a.value].render();
+        //                 }
+        //             }
+
+        //             if(a.name === 'key')
+        //                 node['key'] = a.value;
+
+        //             if(a.name === 'state')
+        //                 this.index_state(a.value.trim(), node, base_node, 'attr', token, {attr: a.name});
+                    
+        //             if(this.has_events_listener(`${a.name}='${a.value}'`))
+        //             {
+        //                 const event = a.name.replace('on', '');
+        //                 const action = a.value.trim();
+        //                 node.addEventListener(event, (e)=>
+        //                 {
+        //                     if(node.tagName.toLowerCase() === 'form')
+        //                         e.preventDefault();
+        //                     this.call_action(action, {ev: e, target: e.target, node: node});
+        //                 });
+        //             }
+        //             if(this.has_textual_state(a.value))
+        //                 this.index_textual_states(node, base_node, 'text_attr', a.value, token, {attr: a.name});
+                    
+        //             if(a.name.toLowerCase().trim() === 'if')
+        //             {
+        //                 const cond = a.value.substr(1, a.value.length - 2).replace(/\s/g, '');
+        //                 const split = cond.split(':');
+        //                 let condition = split[0];
+        //                 this.index_conditional_states(node, base_node, 'if', split[0], token, {yes: split[1].trim(), no: split[2].trim()});
+        //             }else if(a.name.toLowerCase().trim() === 'foreach')
+        //             {
+        //                 const cond = a.value.substr(1, a.value.length - 2).replace(/\s/g, '');
+        //                 const split = cond.split(':');
+        //                 let condition = split[0];
+        //                 this.index_foreach_states(node, base_node, 'foreach', split[0], token, {iterator: split[1].trim()});
+        //             }else if(a.name.toLowerCase().trim() === 'for')
+        //             {
+        //             }
+        //         }
+        //         for(let a of attrs)
+        //         {
+        //             if(a.name !== 'class' && 
+        //                 a.name !== 'classComp' && 
+        //                 a.name !== 'href' && 
+        //                 a.name !== 'type' && 
+        //                 a.name !== 'value' &&
+        //                 a.name !== 'src' &&
+        //                 a.name !== 'style'
+        //             )
+        //             {
+        //                 if(jQuery)
+        //                     if(a.name === 'id')
+        //                         continue;
+        //                 node.removeAttributeNode(a);
+        //             }
+        //         }
+
+        //     }else if(node.nodeType === 3)
+        //     {
+        //         if(!this.has_textual_state(node.nodeValue)) return;
+        //         this.index_textual_states(node, base_node, 'text', node.nodeValue, token);
+        //     }
+        // },
 
 
 

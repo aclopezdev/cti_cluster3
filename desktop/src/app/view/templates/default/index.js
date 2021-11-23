@@ -35,17 +35,18 @@ exports.Default = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-
-            this._dom.main = (
-                `<section>
-                    <div id='Header' classComp='header'></div>
-                    <section class='body-panel'>
-                        <div id='Main-menu' classComp='main-menu'></div>
-                        <div id='Body' classComp='body'></div>
-                    <section>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section>
+                        <div id='Header' classComp='header'></div>
+                        <section class='body-panel'>
+                            <div id='Main-menu' classComp='main-menu'></div>
+                            <div id='Body' classComp='body'></div>
+                        <section>
+                    </section>`
+                );
+            });
         }
     }
 );
