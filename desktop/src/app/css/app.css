@@ -12,6 +12,12 @@ html, body
     overflow-x: hidden;
 }
 
+h1
+{
+    font-size: 1em;
+    margin: 10px 0px;
+}
+
 button
 {
     background-color: #DDD;
@@ -24,6 +30,31 @@ button
 button:hover
 {
     background-color: #EEE;
+}
+
+input[type='submit']
+{
+    background-color: #3bb197;
+    color: #c8e8da;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type='submit']:hover
+{
+    color: #FFF;
+}
+
+input[type='reset']
+{
+    background-color: #DDD;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .dflex
@@ -91,4 +122,73 @@ button:hover
 {
     text-align: center;
     color: #c8e8da;
+}
+
+
+.content-bbox
+{
+    padding: 15px;
+}
+
+
+
+
+
+.capsule
+{
+    background-color: #EEE;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.capsule > h1
+{
+    padding: 5px;
+    background-color: #555;
+    color: #EEE;
+    margin: 0px;
+    text-align: center;
+    font-size: 1.5em;
+}
+.capsule > div
+{
+    padding: 20px;
+    overflow: auto;
+}
+.capsule > div p
+{
+    margin: 5px 0px;
+}
+.capsule > div input[type='text'], .capsule > div select
+{
+    width: 100%;
+    font-size: 12pt;
+}
+
+
+
+.green-flag
+{
+    height: 20px;
+    width: 100%;
+    background-color: #0F0;
+    border-radius: 10px;
+}
+.red-flag
+{
+    height: 20px;
+    width: 100%;
+    background-color: #F00;
+    border-radius: 10px;
+}
+
+
+
+.data_loader
+{
+    text-align: center;
+}
+.data_loader p
+{
+    margin: 5px 0px;
 }

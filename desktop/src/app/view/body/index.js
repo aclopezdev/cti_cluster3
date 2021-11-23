@@ -27,7 +27,9 @@ exports.Body = new Class(
             this._dom.main = (
                 `<section>
                     <h1 class='title'>[state:title]</h1>
-                    <section id='Body-content'></section>
+                    <div class='content-bbox'>
+                        <section id='Body-content'></section>
+                    </div>
                 </section>`
             );
         }

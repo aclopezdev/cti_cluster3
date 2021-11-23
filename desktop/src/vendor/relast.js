@@ -141,6 +141,50 @@ const Rapp = new Class(
             if(this._self.run)
                 this._self.run(this._props);
         },
+        insert: function(k, bbox)
+        {
+            if(!bbox) return;
+            if(!k) return;
+            if(!this._dom[k]) return;
+
+            if(typeof(bbox) === 'string')
+            {
+                if(this._wrappers.indexers[bbox])
+                    bbox = this._wrappers.indexers[bbox];
+                else 
+                if(document.getElementById(bbox))
+                {
+                    console.log(document.getElementById(bbox));
+                    bbox = document.getElementById(bbox);
+                }
+            }
+            if(!bbox) return;
+            bbox.innerHTML = '';
+
+            const doms = this.print(this._dom[k]);
+            this.set_bbox_classes(doms);
+            for(let c in doms.visual.childNodes)
+            {
+                if(!doms.visual.childNodes.hasOwnProperty(c)) continue;
+                const child = doms.visual.childNodes[c];
+                bbox.appendChild(child);
+            }
+
+            if(this._dom.style)
+            {
+                if(this._dom.style.trim() !== '')
+                {
+                    let style = `<style>${this._dom.style}</style>`;
+                    if(this._dom.style.includes('<style>'))
+                        style = this._dom.style;
+                    const style_node = document.createElement('div');
+                    style_node.innerHTML = style;
+                    bbox.appendChild(style_node);
+                }
+            }
+
+            this.update_states();
+        },
         print: function(html)
         {
             let base = 'div';
@@ -250,9 +294,13 @@ const Rapp = new Class(
                         a.name !== 'href' && 
                         a.name !== 'type' && 
                         a.name !== 'value' &&
-                        a.name !== 'src'
+                        a.name !== 'src' &&
+                        a.name !== 'style'
                     )
                     {
+                        if(jQuery)
+                            if(a.name === 'id')
+                                continue;
                         node.removeAttributeNode(a);
                     }
                 }
@@ -277,7 +325,7 @@ const Rapp = new Class(
 
                 if(this._bbox.hasAttribute('class'))
                     for(let cl of this._bbox.classList)
-                        classes += `${cl} `;
+                        classes += ` ${cl} `;
                         
                 this._bbox.setAttribute('class', `${this._name}-main ${classes}`);
             }else
@@ -305,7 +353,7 @@ const Rapp = new Class(
                 {
                     for(let cl of child.classList)
                         if(child.hasAttribute('classComp'))
-                            classes += `${cl} `;
+                            classes += ` ${cl} `;
                 }
                 child.setAttribute('class', `${this._name}-main ${classes}`);
                 child.removeAttribute('classComp');
@@ -344,6 +392,7 @@ const Rapp = new Class(
         {
             if(!this._wrappers.indexers[token])
             {
+                console.log(node.parentNode);
                 this._wrappers.indexers[token] = {
                     final_node: node,
                     base_node: base_node,
@@ -433,10 +482,10 @@ const Rapp = new Class(
                             for(let i of buffer)
                             {
                                 let item = this._dom.iterator[data.addons.iterator];
-                                if(item.includes('foreach'))
-                                {
+                                // if(item.includes('foreach'))
+                                // {
                                     
-                                }
+                                // }
                                 for(let p in i)
                                 {
                                     if(!i.hasOwnProperty(p)) continue;
