@@ -17,7 +17,7 @@ exports.Default = new Class(
         run: function(props)
         {
             // THIS METHOD RUN WHEN THE RENDER FINISH
-            this.call_action('nav', '/users');
+            this.call_action('nav', '/products');
         },
         states: function(props)
         {
@@ -27,7 +27,7 @@ exports.Default = new Class(
             this.action('nav', (args)=>
             {
                 const body_comp = this.get_comp('Body');
-                const mod = this.navigate(args, body_comp.get_DOM_id('Body-content'));
+                const mod = this.navigate(args, body_comp.get_id('Body-content'));
                 if(mod)
                     if(mod.title)
                         body_comp.state('title', mod.title);

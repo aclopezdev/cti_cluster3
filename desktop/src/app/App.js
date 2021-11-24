@@ -17,11 +17,11 @@ exports.App = new Class(
 
             this.add_comp('Session', session, {props:{response: 'session_response'}});
             this.add_comp('Login', login, {css: 'components/login/main.css', props: {response: 'session_response', Session:'Session'}});
-            // this.add_comp('Template', main, {css: 'view/templates/default/main.css', props:{Session:'Session'}});
+            this.add_comp('Template', main, {css: 'view/templates/default/main.css', props:{Session:'Session'}});
 
-            // this.set_nav('/dashboard', { name: 'Dashboard', title: 'Dashboard', mod: Dashboard });
-            // this.set_nav('/products', { name: 'Products', title: 'Products Manager', mod: Products });
-            // this.set_nav('/users', { name: 'Users', title: 'Users Manager', mod: Users });
+            this.set_nav('/dashboard', { name: 'Dashboard', title: 'Dashboard', mod: Dashboard });
+            this.set_nav('/products', { name: 'Products', title: 'Products Manager', mod: Products });
+            this.set_nav('/users', { name: 'Users', title: 'Users Manager', mod: Users });
         },
         run: function(props)
         {

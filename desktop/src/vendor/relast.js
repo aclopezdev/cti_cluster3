@@ -17,6 +17,7 @@ const Rapp = new Class(
         _dom: {},
         _effects: [],
         _wrappers: {indexers: {}, ids:{}},
+        _nav: {},
 
         _ran: false,
 
@@ -85,8 +86,11 @@ const Rapp = new Class(
                     this.run(this._props);
             }
             if(bbox === this._bbox)
+            {
+                this.set_bbox_classes(bbox);
                 if(this.effect)
                     this.effect(this._props);
+            }
             this.update_states();
         },
         reset: function(bbox)
@@ -107,7 +111,12 @@ const Rapp = new Class(
             k = k || 'main';
             if(k.trim() == '') return;
             if(this._dom[k])
-                return this._dom[k](args);
+            {
+                if(typeof(this._dom[k]) === 'function')
+                    return this._dom[k](args);
+                else
+                    return this._dom[k];
+            }
             return null;
         },
         state: function(k, v=null)
@@ -203,13 +212,18 @@ const Rapp = new Class(
             let aux = this._main;
             for(let comp of split_path)
             {
-                if(aux._comps[comp])
+                if(aux._comps[comp.toUpperCase()])
                 {
-                    aux = aux._comps[comp];
+                    aux = aux._comps[comp.toUpperCase()];
                 }else
                     continue;
             }
-            return aux._visible ? aux : null;
+            return aux;
+        },
+        get_id: function(k)
+        {
+            if(!k) return;
+            return this._wrappers.ids[k];
         },
         set_nav: function(path, conf, options={})
         {
@@ -223,17 +237,19 @@ const Rapp = new Class(
             if(!bbox) return;
             const obj = this._main._nav[path];
             if(!obj) return;
-            if(!this._main._comps[obj.name])
+            const comp_name = obj.name.toUpperCase();
+            if(!this._main._comps[comp_name])
             {
-                this._main.add_comp(obj.name, obj.mod, options);
-                if(!this._main._comps[obj.name]) return;
-                this._main._comps[obj.name]._bbox = bbox;
-                this._main._comps[obj.name].start(options);
+                this._main.add_comp(comp_name, obj.mod, options);
+                if(!this._main._comps[comp_name]) return;
+                this._main._comps[comp_name]._bbox = bbox;
+                this._main._comps[comp_name].start(options);
             }
-            this._main._comps[obj.name].render();
+            this._main._comps[comp_name]._ran = false;
+            this._main._comps[comp_name].render();
             return obj;
         },
-        set_bbox_classes: function(doms)
+        set_bbox_classes: function(bbox)
         {
             if(this._bbox.hasAttribute('class') || this._bbox.hasAttribute('classComp'))
             {
@@ -255,7 +271,7 @@ const Rapp = new Class(
                 this._bbox.setAttribute('class', `${this._name}-main`);
             }
             this._bbox.removeAttribute('classComp');
-            this.set_bbox_classes_node(doms.visual);
+            this.set_bbox_classes_node(bbox);
         },
         set_bbox_classes_node: function(root)
         {
