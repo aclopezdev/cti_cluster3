@@ -39,6 +39,21 @@ class MysqlDB
         }
         return count($buffer) > 1 || count($buffer) == 0 ? $buffer : $buffer[0];
     }
+   
+    function fetch2buffer($data)
+    {
+        if(!$data) return [];
+        $buffer = array();
+        $fields = mysqli_fetch_fields($data);
+        while($row = mysqli_fetch_array($data))
+        {
+            $row_buffer = array();
+            foreach($fields as $field)
+                $row_buffer[$field->{'name'}] = $row[$field->{'name'}];
+            array_push($buffer, $row_buffer);
+        }
+        return $buffer;
+    } 
 }
 
 ?>
