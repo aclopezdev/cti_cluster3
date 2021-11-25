@@ -45,6 +45,43 @@ const MyAPI =
             user: args.email,
             pass: args.password
         });
+    },
+    get_users: (args, cback)=>
+    {
+        MyNet.fetch('users', 'get_full_list', (res)=>
+        {
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        });
+    },
+    get_user_data: (args, cback)=>
+    {
+        MyNet.fetch('users', 'get_user_data', (res)=>
+        {
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        }, args);
+    },
+    new_user: (args, cback)=>
+    {
+        console.log(args);
+        MyNet.fetch('users', 'new_user', (res)=>
+        {
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        }, args);
     }
 }
 
