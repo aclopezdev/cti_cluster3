@@ -26,6 +26,7 @@ exports.Main_menu = new Class(
         {
             this.action('dashboard', ()=>{ this._parent.call_action('nav', '/dashboard') });
             this.action('products', ()=>{ this._parent.call_action('nav', '/products') });
+            this.action('sales', ()=>{ this._parent.call_action('nav', '/sales') });
             this.action('users', ()=>{ this._parent.call_action('nav', '/users') });
             this.action('settings', ()=>{ this._parent.call_action('nav', '/settings') });
         },
@@ -45,7 +46,7 @@ exports.Main_menu = new Class(
                             <button onclick='dashboard'>Dashboard</button>
                             <hr/>
                             <button onclick='products'>Stock Management</button>
-                            <button onclick='sales'>Sales and Invsoicing</button>
+                            <button onclick='sales'>Sales and Invoicing</button>
                             <hr/>
                             <button onclick='users'>User Management</button>
                             <hr/>

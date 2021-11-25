@@ -4,7 +4,8 @@ const main = require('./view/templates/default/index').Default;
 
 // NAVIGATION
 const Dashboard = require('./content/dashboard/index').Dashboard;
-const Products = require('./content/products_manager/index').Products;
+const Products = require('./content/products_manager/stock').Products;
+const Sales = require('./content/products_manager/index').Sales_Invoice;
 const Users = require('./content/users_manager/index').Users;
 // NAVIGATION
 
@@ -21,6 +22,7 @@ exports.App = new Class(
 
             this.set_nav('/dashboard', { name: 'Dashboard', title: 'Dashboard', mod: Dashboard });
             this.set_nav('/products', { name: 'Products', title: 'Stock Management', mod: Products });
+            this.set_nav('/sales', { name: 'Sales', title: 'Sales and Invoicing', mod: Sales });
             this.set_nav('/users', { name: 'Users', title: 'Users Management', mod: Users });
         },
         run: function(props)

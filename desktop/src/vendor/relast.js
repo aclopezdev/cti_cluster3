@@ -1,4 +1,4 @@
-'use strict';
+'use stict';
 
 const Rapp = new Class(
     {
@@ -203,6 +203,12 @@ const Rapp = new Class(
                 return this._comps[k.toUpperCase()];
             return null;
         },
+        reset_comp: function(k)
+        {
+            const comp = this.get_comp(k);
+            if(comp)
+                comp._ran = false;
+        },
         looking_comp: function(path)
         {
             if(!path) return;
@@ -246,8 +252,17 @@ const Rapp = new Class(
                 this._main._comps[comp_name].start(options);
             }
             this._main._comps[comp_name]._ran = false;
+            this._main._comps[comp_name].reset_all_comps();
             this._main._comps[comp_name].render();
             return obj;
+        },
+        reset_all_comps: function()
+        {
+            for(let c in this._comps)
+            {
+                this._comps[c].reset_all_comps();
+                this._comps[c]._ran = false;
+            }
         },
         set_bbox_classes: function(bbox)
         {

@@ -104,6 +104,86 @@ const MyAPI =
             price: args.price,
             stock: args.stock
         });
+    },
+    get_stock_data: (args, cback)=>
+    {
+        MyNet.fetch('stock', 'get_stock_data', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        },{
+            id: args.id
+        });
+    },
+    edit_stock: (args, cback)=>
+    {
+        MyNet.fetch('stock', 'edit_stock', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        },{
+            id: args.id,
+            name: args.name,
+            desc: args.desc,
+            price: args.price.replace('$', '').replace(' ', '').replace(',', '.'),
+            stock: args.stock
+        });
+    },
+    toggle_stock: (args, cback)=>
+    {
+        MyNet.fetch('stock', 'toggle_stock', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        },{
+            id: args.id
+        });
+    },
+    get_clients: (args, cback)=>
+    {
+        MyNet.fetch('clients', 'get_clients_list', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        });
+    },
+    new_client: (args, cback)=>
+    {
+        MyNet.fetch('clients', 'add_new_client', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        },{
+            first_name: args.first_name,
+            last_name: args.last_name,
+            address: args.address,
+            phone: args.phone
+        });
     }
 }
 
