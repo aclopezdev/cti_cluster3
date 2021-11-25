@@ -8,6 +8,8 @@
 {
     padding: 5px 0px;
     background-color: #2e3e40;
+    position: sticky;
+    top: 0px;
 }
 .Template-header > section > h1
 {
@@ -80,6 +82,12 @@
     border: 0px;
     border-bottom: solid 1px rgb(52,64,68);
     margin: 0px;
+}
+
+.Template-main-menu .Main-menu-main 
+{
+    position: sticky;
+    top: 51px;
 }
 
 .Template-body

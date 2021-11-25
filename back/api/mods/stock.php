@@ -2,8 +2,7 @@
 
 
 $_mods['stock'] = [
-    'get_stock' => function($args, $data)
-    {
+    'get_stock' => function ($args, $data) {
         global $output;
 
         // $stock = $data['mysql']->query("SELECT `s`.`uid` as `ID`, `s`.`name` as `Name`, CONCAT('$', `s`.`price`) as `Price`, `s`.`stock` as `Stock`, `s`.`status` as `Status`, `s`.`date_crea` as `Date creation`, CONCAT(`u`.`first_name`, ' ', `u`.`last_name`) AS `Creator` 
@@ -19,53 +18,59 @@ $_mods['stock'] = [
 
         $output['stock'] = $stock;
     },
-    'new_stock'=> function($args, $data)
-    {
+    'new_stock' => function ($args, $data) {
         global $output;
 
         $uid = uuid();
         $args['name'] = str_replace("'", "\"", $args['name']);
-        $args['desc'] = str_replace("'", "\"", $args['desc']);  
-        $resp = $data['mysql']->query("INSERT INTO `stock` (`uid`, `name`, `desc`, `price`, `stock`, `status`, `date_crea`) VALUES ('".$uid."', '".$args['name']."', '".$args['desc']."', '".$args['price']."', '".$args['stock']."', '1', '".$data['datetime_now']."');");
-        
+        $args['desc'] = str_replace("'", "\"", $args['desc']);
+        $resp = $data['mysql']->query("INSERT INTO `stock` (`uid`, `name`, `desc`, `price`, `stock`, `status`, `date_crea`) VALUES ('" . $uid . "', '" . $args['name'] . "', '" . $args['desc'] . "', '" . $args['price'] . "', '" . $args['stock'] . "', '1', '" . $data['datetime_now'] . "');");
+
         $output['error'] = !$resp;
     },
-    'get_stock_data'=> function($args, $data)
-    {
+    'get_stock_data' => function ($args, $data) {
         global $output;
 
         $stock = $data['mysql']->query("SELECT `s`.`uid` as `ID`, `s`.`name` as `Name`, `s`.`desc` as `Description`, `s`.`price` as `Price`, `s`.`stock` as `Stock`, `s`.`status` as `Status`, `s`.`date_crea` as `Date creation`, `user_crea` AS `Creator` 
         FROM `stock` as `s`
-        WHERE `s`.`uid` = '".$args['id']."'
+        WHERE `s`.`uid` = '" . $args['id'] . "'
         ORDER BY `s`.`date_crea` DESC LIMIT 200;");
         $stock = $data['mysql']->fetch2array($stock);
 
         $output['stock'] = $stock;
     },
-    'edit_stock'=> function($args, $data)
-    {
+    'edit_stock' => function ($args, $data) {
         global $output;
 
         $args['name'] = str_replace("'", "\"", $args['name']);
         $args['desc'] = str_replace("'", "\"", $args['desc']);
-        $resp = $data['mysql']->query("UPDATE `stock` SET `name` = '".$args['name']."', `desc` = '".$args['desc']."', `price` = '".$args['price']."', `stock` = '".$args['stock']."' WHERE `uid` = '".$args['id']."';");
+        $resp = $data['mysql']->query("UPDATE `stock` SET `name` = '" . $args['name'] . "', `desc` = '" . $args['desc'] . "', `price` = '" . $args['price'] . "', `stock` = '" . $args['stock'] . "' WHERE `uid` = '" . $args['id'] . "';");
 
         $output['error'] = !$resp;
     },
-    'toggle_stock'=> function($args, $data)
-    {
+    'toggle_stock' => function ($args, $data) {
         global $output;
 
-        $stock = $data['mysql']->query("SELECT `status` FROM `stock` WHERE `uid` = '".$args['id']."' LIMIT 1;");
+        $stock = $data['mysql']->query("SELECT `status` FROM `stock` WHERE `uid` = '" . $args['id'] . "' LIMIT 1;");
         $stock = $data['mysql']->fetch2array($stock);
-        
+
         $status = $stock['status'] === '1' ? 0 : 1;
-        
-        $resp = $data['mysql']->query("UPDATE `stock` SET `status` = '".$status."' WHERE `uid` = '".$args['id']."';");
+
+        $resp = $data['mysql']->query("UPDATE `stock` SET `status` = '" . $status . "' WHERE `uid` = '" . $args['id'] . "';");
 
         $output['error'] = !$resp;
+    },
+    'find_stock' => function ($args, $data) {
+        global $output;
+
+        $query = "SELECT `uid` as `ID`, `name`, `desc`, `price`, `stock`, `status`, `date_crea`, `user_crea` 
+        FROM `stock`
+        WHERE (`name` LIKE '%" . $args['txt'] . "%' OR `ID` LIKE '%" . $args['txt'] . "%') AND `status` = '1'
+        ORDER BY `date_crea` DESC;";
+        // echo $query;
+        $stock = $data['mysql']->query($query);
+        $stock = $data['mysql']->fetch2buffer($stock);
+
+        $output['stock'] = $stock;
     }
 ];
-
-
-?>
