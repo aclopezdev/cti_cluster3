@@ -20,8 +20,8 @@ exports.App = new Class(
             this.add_comp('Template', main, {css: 'view/templates/default/main.css', props:{Session:'Session'}});
 
             this.set_nav('/dashboard', { name: 'Dashboard', title: 'Dashboard', mod: Dashboard });
-            this.set_nav('/products', { name: 'Products', title: 'Products Manager', mod: Products });
-            this.set_nav('/users', { name: 'Users', title: 'Users Manager', mod: Users });
+            this.set_nav('/products', { name: 'Products', title: 'Stock Management', mod: Products });
+            this.set_nav('/users', { name: 'Users', title: 'Users Management', mod: Users });
         },
         run: function(props)
         {

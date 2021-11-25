@@ -106,13 +106,30 @@ exports.Users = new Class(
                 });
                 MyAPI.get_user_data({id: args}, (res)=>
                 {
-                    this.state('first_name', res.users[0].first_name);
-                    this.state('last_name', res.users[0].last_name);
-                    this.state('user_email', res.users[0].email);
-                    this.render({
-                        dom: 'edit_user_form',
-                        bbox: 'user-list-section'
-                    });
+                    let load = false;
+                    if(res.users)
+                    {
+                        if(res.users.length > 0)
+                        {
+                            
+                            load = true;
+                            this.state('first_name', res.users[0].first_name);
+                            this.state('last_name', res.users[0].last_name);
+                            this.state('user_email', res.users[0].email);
+                            this.render({
+                                dom: 'edit_user_form',
+                                bbox: 'user-list-section'
+                            });
+                            return;
+                        }
+                    }
+                    if(load)
+                    {
+                        this.render({
+                            dom: 'show_users_list',
+                            bbox: 'user-list-section'
+                        });
+                    }
                     console.log(res);
                 });
             });

@@ -169,7 +169,7 @@ input[type='reset']
 {
     margin: 5px 0px;
 }
-.capsule > div input[type='text'], .capsule > div select
+.capsule > div input[type='text'], .capsule > div select, .capsule > div textarea
 {
     width: 100%;
     font-size: 12pt;

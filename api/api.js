@@ -45,6 +45,65 @@ const MyAPI =
             user: args.email,
             pass: args.password
         });
+    },
+    get_users: (args, cback)=>
+    {
+        MyNet.fetch('users', 'get_full_users', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        });
+    },
+    get_user_data: (args, cback)=>
+    {
+        MyNet.fetch('users', 'get_user_data', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        }, {
+            id: args.id
+        });
+    },
+    get_stock: (args, cback)=>
+    {
+        MyNet.fetch('stock', 'get_stock', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        });
+    },
+    new_stock: (args, cback)=>
+    {
+        MyNet.fetch('stock', 'new_stock', (res)=>
+        {
+            res['error'] = false;
+            if(cback)
+                cback(res);
+        }, ()=>
+        {
+            if(cback)
+                cback({error: true});
+        },{
+            name: args.name,
+            desc: args.desc,
+            price: args.price,
+            stock: args.stock
+        });
     }
 }
 

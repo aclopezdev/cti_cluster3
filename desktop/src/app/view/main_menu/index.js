@@ -43,10 +43,13 @@ exports.Main_menu = new Class(
                         </div>
                         <div class='menu-container'>
                             <button onclick='dashboard'>Dashboard</button>
-                            <button onclick='products'>Products</button>
-                            <button onclick='users'>Users</button>
-                            <button onclick='settings'>Settings</button>
                             <hr/>
+                            <button onclick='products'>Stock Management</button>
+                            <button onclick='sales'>Sales and Invsoicing</button>
+                            <hr/>
+                            <button onclick='users'>User Management</button>
+                            <hr/>
+                            <button onclick='settings'>Settings</button>
                             <button class='btn-link'>Logout</button>
                         </div>
                     </section>`
