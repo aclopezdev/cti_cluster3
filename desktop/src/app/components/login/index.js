@@ -73,10 +73,7 @@ exports.Login = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-            this._dom.iterator.messages = `<li>[message]</li>`;
-            this._dom.style = `
-            <style>
+            this._dom.style = `<style>
                 ${this._name}-login-bbox-hide
                 {
                     display: none;
@@ -87,22 +84,25 @@ exports.Login = new Class(
                 }
             </style>`;
 
-            this._dom.main = (
-                `<section class='login-bbox'>
-                    <form onsubmit='login-submit'>
-                        <div class='login-response-${this.state('response_toggle')}'>
-                            <ul foreach='[messages:messages]'></ul>
-                        </div>
-                        <p>E-mail</p>
-                        <div><input type='text' value='[state:email]' onchange='input_email' /></div>
-                        <p>Password</p>
-                        <div><input type='password' value='[state:pass]' onchange='input_pass' /></div>
-                        <div>
-                            <input type='submit' value='Login' />
-                        </div>
-                    </form>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section class='login-bbox'>
+                        <form onsubmit='login-submit'>
+                            <div class='login-response-${this.state('response_toggle')}'>
+                                <ul foreach='[messages:messages]'></ul>
+                            </div>
+                            <p>E-mail</p>
+                            <div><input type='text' value='[state:email]' onchange='input_email' /></div>
+                            <p>Password</p>
+                            <div><input type='password' value='[state:pass]' onchange='input_pass' /></div>
+                            <div>
+                                <input type='submit' value='Login' />
+                            </div>
+                        </form>
+                    </section>`
+                );
+            });
         }
     }
 );

@@ -4,7 +4,8 @@ const main = require('./view/templates/default/index').Default;
 
 // NAVIGATION
 const Dashboard = require('./content/dashboard/index').Dashboard;
-const Products = require('./content/products_manager/index').Products;
+const Products = require('./content/products_manager/stock').Products;
+const Sales = require('./content/products_manager/index').Sales_Invoice;
 const Users = require('./content/users_manager/index').Users;
 // NAVIGATION
 
@@ -20,12 +21,22 @@ exports.App = new Class(
             this.add_comp('Template', main, {css: 'view/templates/default/main.css', props:{Session:'Session'}});
 
             this.set_nav('/dashboard', { name: 'Dashboard', title: 'Dashboard', mod: Dashboard });
-            this.set_nav('/products', { name: 'Products', title: 'Products Manager', mod: Products });
-            this.set_nav('/users', { name: 'Users', title: 'Users Manager', mod: Users });
+            this.set_nav('/products', { name: 'Products', title: 'Stock Management', mod: Products });
+            this.set_nav('/sales', { name: 'Sales', title: 'Sales and Invoicing', mod: Sales });
+            this.set_nav('/users', { name: 'Users', title: 'Users Management', mod: Users });
         },
         run: function(props)
         {
             // THIS METHOD RUN WHEN THE RENDER FINISH
+            this.render({
+                dom: 'loading',
+                bbox: 'main-loader'
+            });
+            this.render({
+                dom: 'no_logged',
+                bbox: 'main-content'
+            });
+            // this.get_comp('Session').call_action('check_session');
         },
         states: function(props)
         {
@@ -36,40 +47,52 @@ exports.App = new Class(
         {
             this.action('session_response', (args)=>
             {
+                this.reset('main-loader');
+                if(args)
+                {
+                    this.render({
+                        dom: 'logged',
+                        bbox: 'main-content'
+                    });
+                }
                 this.state('loaded', true);
                 this.state('logged', args);
             });
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
+            this.dom('loading', ()=>
+            {
+                return (
+                    `<div class='loading-lbox'>
+                        <div>
+                            <img src='./assets/preloaders/points.gif' />
+                            <p>Loading...</p>
+                        </div>
+                    </div>`
+                );
+            });
+            
+            this.dom('no_logged', ()=>
+            {
+                return (`<section id='Login'></section>`);
+            });
 
-            this._dom.loading = (
-                `<div class='loading-lbox'>
-                    <div>
-                        <img src='./assets/preloaders/points.gif' />
-                        <p>Loading...</p>
-                    </div>
-                </div>`
-            );
+            this.dom('logged', ()=>
+            {
+                return (`<section id='Template'></section>`);
+            });
 
-            this._dom.loaded = (`<div></div>`);
-
-            this._dom.no_logged = (
-                `<section id='Login'></section>`
-            );
-
-            this._dom.logged = (
-                `<section id='Template'></section>`
-            );
-
-            this._dom.main = (
-                `<section>
-                    <div id='Session'></div>
-                    <div if='[logged === true:logged:no_logged]' class='main-content'></div>
-                    <div if='[loaded === false:loading:loaded]'></div>
-                </section>`
-            );
+            this._dom.main = () =>
+            {
+                return (
+                    `<section>
+                        <div id='Session'></div>
+                        <div id='main-content' class='main-content'></div>
+                        <div id='main-loader'></div>
+                    </section>`
+                );
+            }
         }
     }
 );

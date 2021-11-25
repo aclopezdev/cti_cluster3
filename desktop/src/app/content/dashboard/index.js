@@ -18,13 +18,14 @@ exports.Dashboard = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-
-            this._dom.main = (
-                `<section>
-                    <h1>Hello Dashboard [state:aaa]</h1>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section>
+                        <h1>Hello Dashboard [state:aaa]</h1>
+                    </section>`
+                );
+            });
         }
     }
 );

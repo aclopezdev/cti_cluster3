@@ -99,7 +99,13 @@ input[type='reset']
 {
     height: 100%;
 }
-.Main-main .loading-lbox
+
+
+
+
+
+
+.loading-lbox
 {
     position: fixed;
     left: 0px;
@@ -110,19 +116,23 @@ input[type='reset']
     display: flex;
     justify-content: center;
 }
-.Main-main .loading-lbox > div
+.loading-lbox > div
 {
     align-self: center;
 }
-.Main-main .loading-lbox > div img
+.loading-lbox > div img
 {
     width: 100px;
 }
-.Main-main .loading-lbox > div p
+.loading-lbox > div p
 {
     text-align: center;
     color: #c8e8da;
 }
+
+
+
+
 
 
 .content-bbox
@@ -159,7 +169,7 @@ input[type='reset']
 {
     margin: 5px 0px;
 }
-.capsule > div input[type='text'], .capsule > div select
+.capsule > div input[type='text'], .capsule > div select, .capsule > div textarea
 {
     width: 100%;
     font-size: 12pt;

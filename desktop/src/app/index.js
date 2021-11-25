@@ -1,5 +1,6 @@
 const elec = require('electron');
 const App = require('./App').App;
+const test_App = require('./(testing)App').App;
 const nocache = Rapp.uuid();
 
 window.onload = () =>
@@ -14,5 +15,10 @@ window.onload = () =>
             bbox: document.getElementById('root'),
             electron: elec,
         }).start().render();
+        // new test_App({
+        //     name: 'Main',
+        //     bbox: document.getElementById('root'),
+        //     electron: elec,
+        // }).start().render();
     // }
 }

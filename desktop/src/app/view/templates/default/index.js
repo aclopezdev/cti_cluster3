@@ -17,7 +17,7 @@ exports.Default = new Class(
         run: function(props)
         {
             // THIS METHOD RUN WHEN THE RENDER FINISH
-            this.call_action('nav', '/users');
+            this.call_action('nav', '/sales');
         },
         states: function(props)
         {
@@ -27,7 +27,7 @@ exports.Default = new Class(
             this.action('nav', (args)=>
             {
                 const body_comp = this.get_comp('Body');
-                const mod = this.navigate(args, body_comp.get_DOM_id('Body-content'));
+                const mod = this.navigate(args, body_comp.get_id('Body-content'));
                 if(mod)
                     if(mod.title)
                         body_comp.state('title', mod.title);
@@ -35,17 +35,18 @@ exports.Default = new Class(
         },
         draw: function(props)
         {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
-
-            this._dom.main = (
-                `<section>
-                    <div id='Header' classComp='header'></div>
-                    <section class='body-panel'>
-                        <div id='Main-menu' classComp='main-menu'></div>
-                        <div id='Body' classComp='body'></div>
-                    <section>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section>
+                        <div id='Header' classComp='header'></div>
+                        <section class='body-panel'>
+                            <div id='Main-menu' classComp='main-menu'></div>
+                            <div id='Body' classComp='body'></div>
+                        <section>
+                    </section>`
+                );
+            });
         }
     }
 );

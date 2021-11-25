@@ -19,11 +19,14 @@ exports.Header = new Class(
         {
             //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
 
-            this._dom.main = (
-                `<section class='dflex dflex-wrap justifyc-center'>
-                    <h1>Ecom</h1>
-                </section>`
-            );
+            this.dom('main', ()=>
+            {
+                return (
+                    `<section class='dflex dflex-wrap justifyc-center'>
+                        <h1>Ecom</h1>
+                    </section>`
+                );
+            });
         }
     }
 );
