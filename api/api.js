@@ -288,6 +288,80 @@ const MyAPI = {
 			}
 		);
 	},
+	load_invoices: function(args, cback)
+	{
+		MyNet.fetch(
+			"invoices",
+			"invoices_list",
+			res => {
+				const cols = {
+					INVOICE_ID: 'Invoice ID',
+					CLIENT_ID: 'Client ID',
+					CLIENT_NAME: 'Client Name',
+					STATUS: 'Status',
+					SELL_DATE: 'Sale date'
+				};	
+				const titles = [
+					{ title: "Invoice ID" },
+					{ title: "Client ID" },
+					{ title: "Client Name" },
+					{ title: "Status" },
+					{ title: "Sale date" }
+				];
+				const columns = [];
+				const buffer = [];
+				for(let c in cols)
+					columns.push(cols[c])
+					
+				for(let r of res.invoices)
+				{
+					const row = [];
+					for(let c in r)
+					{
+						row.push(r[c]);
+					}
+					buffer.push(row);
+				}
+				if (cback) cback({invoices: buffer, columns: columns, titles: titles});
+			},
+			() => {
+				if (cback) cback({ error: true });
+			}
+		);
+	},
+	save_invoice: function(args, cback)
+	{
+		MyNet.fetch(
+			"invoices",
+			"add_invoice",
+			res => {
+				if (cback) cback(res);
+			},
+			() => {
+				if (cback) cback({ error: true });
+			},
+			{
+				client_id: args.client_id,
+				products: args.basket
+			}
+		);
+	},
+	toggle_invoice: function(args, cback)
+	{
+		MyNet.fetch(
+			"invoices",
+			"toggle_invoice",
+			res => {
+				if (cback) cback(res);
+			},
+			() => {
+				if (cback) cback({ error: true });
+			},
+			{
+				sale_id: args.id
+			}
+		);
+	}
 };
 
 MyAPI.debug = true;

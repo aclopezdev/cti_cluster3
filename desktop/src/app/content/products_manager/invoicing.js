@@ -5,9 +5,13 @@ exports.Invoicing = new Class({
 	},
 	run: function(props) {
 		this.render({ dom: "capsule", bbox: "invoice-content" });
-		this.call_action("show_client_finder");
 		if (Rapp.obj_length(this.state("basket")) > 0)
+		{
+			this.call_action("show_client_finder");
 			this.call_action("show_prev_invoice_saved");
+		}else{
+			this.call_action('show_invoice_list');
+		}
 	},
 	states: function(props) {
 		this.state("client_finder", "");
@@ -222,11 +226,57 @@ exports.Invoicing = new Class({
 		});
 
 		this.action("show_invoice_list", () => {
-			// this.render({
-			// 	dom: "loading",
-			// 	bbox: "product-finer-result",
-			//     params: 'Loading basket...'
-			// });
+			this.render({
+				dom: "loading",
+				bbox: `${this._name}-capsule-section`,
+				params: 'Loading invoices...'
+			});
+			MyAPI.load_invoices({}, (res)=>
+			{
+				this.render({
+					dom: "invoices-table",
+					bbox: `${this._name}-capsule-section`,
+					params: {
+						count: res.invoices.length
+					}
+				});
+				const data = res.invoices;
+				for(let i of data)
+				{
+					let status = parseInt(i[3]);
+					i[3] = status === 1 ? this._dom['green_flag'] : this._dom['red_flag'];
+					i.push(`${this._dom['view_btn'](i[0])} ${this._dom['toggle_btn'](i[0], status === 1 ? 'Deactivate' : 'Activate')}`);
+				}
+				res.titles.push({title: ''});
+				$('#invoices-list-table').DataTable({
+					data: data,
+					columns: res.titles
+				});
+
+				this.call_action('toggle-btn-clik');
+			});
+		});
+
+		this.action('toggle-btn-clik', ()=>
+		{
+			const btns = document.getElementsByClassName('toggle-invoice-btn');
+			for(let btn of btns)
+			{
+				btn.onclick = ()=>
+				{
+					this.render({
+						dom: "loading",
+						bbox: `${this._name}-capsule-section`,
+						params: 'Updating invoice...'
+					});
+
+					const id = btn.getAttribute('key');
+					MyAPI.toggle_invoice({id: id}, (res)=>
+					{
+						this.call_action('show_invoice_list');
+					});
+				}
+			}
 		});
 
 		this.action("show_new_invoice", () => {
@@ -292,14 +342,47 @@ exports.Invoicing = new Class({
 		this.action("keyup_product_finder", e => {
 			this.state("product_finder", e.target.value);
 		});
+
+		this.action('confirm_invoice', ()=>
+		{
+			this.render({
+				dom: 'loading',
+				bbox: `${this._name}-capsule-section`,
+				params: 'Adding new Invoice...'
+			});
+			const data = {
+				client_id: this.state('client_selected'),
+				basket: this.state('basket')
+			}
+			MyAPI.save_invoice(data, (res)=>
+			{
+				if(!res.error)
+				{
+					this.state('client_selected', '');
+					this.state('basket', []);
+					this.call_action('show_invoice_list');
+				}
+			});
+		});
 	},
 	draw: function(props) {
+		this._dom.green_flag = `<div class='green-flag'></div>`;
+		this._dom.red_flag = `<div class='red-flag'></div>`;
+
 		this.dom("product_added", () => {
 			return `<p>Product added to invoice</p>`;
 		});
 
 		this.dom("sell_btn", id => {
 			return `<button key='${id}' class='client-sell-btn'>Start sell</button>`;
+		});
+
+		this.dom("view_btn", id => {
+			return `<button key='${id}' class='view-invoice-btn'>view</button>`;
+		});
+
+		this.dom("toggle_btn", (id, state) => {
+			return `<button key='${id}' class='toggle-invoice-btn'>${state}</button>`;
 		});
 
 		this.dom("add_product_btn", args => {
@@ -347,6 +430,14 @@ exports.Invoicing = new Class({
                     </div>
                 </form>
                 <div id='client-finer-result'></div>`;
+		});
+
+		this.dom("invoices-table", args => {
+			return `<h1 style='border-bottom: solid 1px #DDD'>Results: ${args.count} ${args.count ===
+			1
+				? "invoice"
+				: "invoices"}</h1>
+            <table id='invoices-list-table'></table>`;
 		});
 
 		this.dom("product-find-table", args => {

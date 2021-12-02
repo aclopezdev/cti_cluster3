@@ -25,10 +25,10 @@ exports.Sales_Invoice = new Class({
         {
             return (
                 `<section>
-                    <h1 class='subtitle-section'>Clients Management</h1>
-                    <div id='Clients'></div>
                     <h1 class='subtitle-section'>Invoices Management</h1>
                     <div id='Invoicing'></div>
+                    <h1 class='subtitle-section'>Clients Management</h1>
+                    <div id='Clients'></div>
                 </section>`
             );
         });
