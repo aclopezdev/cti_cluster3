@@ -1,6 +1,6 @@
 const MyAPI = {
 	init: () => {},
-	check_session: cback => {
+	check_session: (cback) => {
 		MyNet.fetch(
 			"session",
 			"checker",
