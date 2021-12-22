@@ -1,0 +1,204 @@
+* {
+    /* font-family: 'aaarghnormal'; */
+    font-family: 'abelregular';
+}
+
+html, body
+{
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+h1
+{
+    font-size: 1em;
+    margin: 10px 0px;
+}
+
+button
+{
+    background-color: #DDD;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover
+{
+    background-color: #EEE;
+}
+
+input[type='submit']
+{
+    background-color: #3bb197;
+    color: #c8e8da;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type='submit']:hover
+{
+    color: #FFF;
+}
+
+input[type='reset']
+{
+    background-color: #DDD;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dflex
+{
+    display: flex;
+}
+.dflex-wrap
+{
+    flex-wrap: wrap;
+}
+.dflex-nowrap
+{
+    flex-wrap: nowrap;
+}
+.justifyc-center
+{
+    justify-content: center;
+}
+
+.btn-link
+{
+    background-color: transparent;
+    border: 0px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+
+
+
+
+.Main-main
+{
+    height: 100%;
+}
+.Main-main .Session-main
+{
+    display: none;
+}
+.Main-main .main-content
+{
+    height: 100%;
+}
+
+
+
+
+
+
+.loading-lbox
+{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #2e3e40;
+    display: flex;
+    justify-content: center;
+}
+.loading-lbox > div
+{
+    align-self: center;
+}
+.loading-lbox > div img
+{
+    width: 100px;
+}
+.loading-lbox > div p
+{
+    text-align: center;
+    color: #c8e8da;
+}
+
+
+
+
+
+
+.content-bbox
+{
+    padding: 15px;
+}
+
+
+
+
+
+.capsule
+{
+    background-color: #EEE;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.capsule > h1
+{
+    padding: 5px;
+    background-color: #555;
+    color: #EEE;
+    margin: 0px;
+    text-align: center;
+    font-size: 1.5em;
+}
+.capsule > div
+{
+    padding: 20px;
+    overflow: auto;
+}
+.capsule > div p
+{
+    margin: 5px 0px;
+}
+.capsule > div input[type='text'], .capsule > div select, .capsule > div textarea
+{
+    width: 100%;
+    font-size: 12pt;
+}
+
+
+
+.green-flag
+{
+    height: 20px;
+    width: 100%;
+    background-color: #0F0;
+    border-radius: 10px;
+}
+.red-flag
+{
+    height: 20px;
+    width: 100%;
+    background-color: #F00;
+    border-radius: 10px;
+}
+
+
+
+.data_loader
+{
+    text-align: center;
+}
+.data_loader p
+{
+    margin: 5px 0px;
+}
