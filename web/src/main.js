@@ -4,7 +4,6 @@ window.onload = () =>
 {
     new App({
         name: 'Main',
-        bbox: document.getElementById('root'),
-        electron: elec,
+        bbox: document.getElementById('root')
     }).start().render().title('CTI Ecom');
 }

@@ -14,7 +14,8 @@ export default class App extends Rapp
 {
     constructor(args)
     {
-        super(args, this);
+        console.log(this);
+        // this.init(args, this);
 
         // this.add_comp('Session', session, {props:{response: 'session_response'}});
         // this.add_comp('Login', login, {css: 'components/login/main.css', props: {response: 'session_response', Session:'Session'}});

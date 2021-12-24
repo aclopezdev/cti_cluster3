@@ -10,20 +10,21 @@ export default class Rapp{
 	_actions = {};
 	_dom = {};
 	_effects = [];
-	_wrappers = { indexers = {}, ids = {} };
+	_wrappers = { indexers: {}, ids: {} };
 	_nav = {};
 	_ran = false;
-	constructor(args, self) 
+	constructor() {};
+	init = function(args, self)
 	{
-		// this._name = args.name;
-		// this._bbox =
-		// 	typeof args.bbox === "string"
-		// 		? document.getElementById(args.bbox)
-		// 		: args.bbox;
-		// this._electron = args.electron;
-		// this._parent = args.parent || this;
-		// this._main = args.main || this._parent;
-	};
+		this._name = args.name;
+		this._bbox =
+			typeof args.bbox === "string"
+				? document.getElementById(args.bbox)
+				: args.bbox;
+		this._electron = args.electron;
+		this._parent = args.parent || this;
+		this._main = args.main || this._parent;
+	}
 	// title = function(title)
 	// {
 	// 	let title_tag = document.createElement('title');

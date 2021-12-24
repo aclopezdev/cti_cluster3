@@ -1,8 +1,9 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
+/web
 
 # dependencies
-/desktop-react/
 /desktop/node_modules
+/http/node_modules
 /web/node_modules
 /desktop-react/desktop/node_modules
 /app/node_modules
