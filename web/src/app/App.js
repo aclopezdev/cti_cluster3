@@ -1,10 +1,14 @@
 import Rapp from '../vendor/relast';
+import Router, {New_router} from '../vendor/relast_router.js';
 // const session = require('./components/session/index').Session;
 // const login = require('./components/login/index').Login;
 // const main = require('./view/templates/default/index').Default;
 
+import LoadingIMG from '../assets/preloaders/points.gif';
+import '../assets/fonts/abel-regular-webfont.woff2';
+
 // // NAVIGATION
-// const Dashboard = require('./content/dashboard/index').Dashboard;
+import Dashboard from './content/dashboard';
 // const Products = require('./content/products_manager/stock').Products;
 // const Sales = require('./content/products_manager/index').Sales_Invoice;
 // const Users = require('./content/users_manager/index').Users;
@@ -14,8 +18,11 @@ export default class App extends Rapp
 {
     constructor(args)
     {
-        console.log(this);
-        // this.init(args, this);
+        super(args);
+        this._router = New_router({container: this});
+
+        this._router.add({name: 'dashboard', caption: 'Dashboard', component: Dashboard, parent: this});
+        console.log(this._comps);
 
         // this.add_comp('Session', session, {props:{response: 'session_response'}});
         // this.add_comp('Login', login, {css: 'components/login/main.css', props: {response: 'session_response', Session:'Session'}});
@@ -29,15 +36,15 @@ export default class App extends Rapp
     run = function(props)
     {
         // // THIS METHOD RUN WHEN THE RENDER FINISH
-        // this.render({
-        //     dom: 'loading',
-        //     bbox: 'main-loader'
-        // });
-        // this.render({
-        //     dom: 'no_logged',
-        //     bbox: 'main-content'
-        // });
-        // // this.get_comp('Session').call_action('check_session');
+        this.render({
+            dom: 'loading',
+            bbox: 'main-loader'
+        });
+        this.render({
+            dom: 'no_logged',
+            bbox: 'main-content'
+        });
+        // this.get_comp('Session').call_action('check_session');
     }
     states = function(props)
     {
@@ -62,55 +69,55 @@ export default class App extends Rapp
     }
     draw = function(props)
     {
-        // this.dom('loading', ()=>
-        // {
-        //     return (
-        //         `<div class='loading-lbox'>
-        //             <div>
-        //                 <img src='./assets/preloaders/points.gif' />
-        //                 <p>Loading...</p>
-        //             </div>
-        //         </div>`
-        //     );
-        // });
+        this.dom('loading', ()=>
+        {
+            return (
+                `<div class='loading-lbox'>
+                    <div>
+                        <img src='./assets/preloaders/points.gif' />
+                        <p>Loading...</p>
+                    </div>
+                </div>`
+            );
+        });
         
-        // this.dom('no_logged', ()=>
-        // {
-        //     return (`<section id='Login'></section>`);
-        // });
+        this.dom('no_logged', ()=>
+        {
+            return (`<section id='Login'></section>`);
+        });
 
-        // this.dom('logged', ()=>
-        // {
-        //     return (`<section id='Template'></section>`);
-        // });
+        this.dom('logged', ()=>
+        {
+            return (`<section id='Template'></section>`);
+        });
 
-        // this._dom.main = () =>
-        // {
-        //     return (
-        //         `<section>
-        //             <div id='Session'></div>
-        //             <div id='main-content' class='main-content'></div>
-        //             <div id='main-loader'></div>
-        //         </section>`
-        //     );
-        // }
+        this._dom.main = () =>
+        {
+            return (
+                `<section>
+                    <div id='Session'></div>
+                    <div id='main-content' class='main-content'></div>
+                    <div id='main-loader'></div>
+                </section>`
+            );
+        }
 
 
-        // this._dom.style =`
-        //     @font-face {
-        //         font-family: 'aaarghnormal';
-        //         src: url('assets/fonts/aaargh-webfont.woff2') format('woff2'),
-        //             url('assets/fonts/aaargh-webfont.woff') format('woff');
-        //         font-weight: normal;
-        //         font-style: normal;
-        //     }
-        //     @font-face {
-        //         font-family: 'abelregular';
-        //         src: url('assets/fonts/abel-regular-webfont.woff2') format('woff2'),
-        //             url('assets/fonts/abel-regular-webfont.woff') format('woff');
-        //         font-weight: normal;
-        //         font-style: normal;
-        //     }
-        //     button{font-size: 20px;}`;
+        this._dom.style =`
+            @font-face {
+                font-family: 'aaarghnormal';
+                src: url('assets/fonts/aaargh-webfont.woff2') format('woff2'),
+                    url('assets/fonts/aaargh-webfont.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+            @font-face {
+                font-family: 'abelregular';
+                src: url('assets/fonts/abel-regular-webfont.woff2') format('woff2'),
+                    url('assets/fonts/abel-regular-webfont.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+            button{font-size: 20px;}`;
     }
 }

@@ -1,31 +1,32 @@
-exports.Dashboard = new Class(
+import Rapp from '../../../vendor/relast.js';
+import Router from '../../../vendor/relast_router.js';
+
+export default class Dashboard extends Rapp
+{
+    constructor(args)
     {
-        Extends: Rapp,
-        initialize: function(args)
+        super(args);
+    };
+    run = function(props)
+    {
+        // THIS METHOD RUN WHEN THE RENDER FINISH
+    };
+    states = function(props)
+    {
+        this.state('aaa', 11);
+    };
+    actions = function(props)
+    {
+    };
+    draw = function(props)
+    {
+        this._dom.main = ()=>
         {
-            this.parent(args, this);
-        },
-        run: function(props)
-        {
-            // THIS METHOD RUN WHEN THE RENDER FINISH
-        },
-        states: function(props)
-        {
-            this.state('aaa', 11);
-        },
-        actions: function(props)
-        {
-        },
-        draw: function(props)
-        {
-            this.dom('main', ()=>
-            {
-                return (
-                    `<section>
-                        <h1>Hello Dashboard [state:aaa]</h1>
-                    </section>`
-                );
-            });
-        }
-    }
-);
+            return (
+                `<section>
+                    <h1>Hello Dashboard [state:aaa]</h1>
+                </section>`
+            );
+        };
+    };
+}

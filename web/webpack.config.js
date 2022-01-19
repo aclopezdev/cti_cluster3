@@ -6,8 +6,6 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 let debug = true;
 let mode = 'development';
 
-console.log(__dirname);
-
 module.exports = ( env, options )=>
 {
 	return {
@@ -17,6 +15,11 @@ module.exports = ( env, options )=>
 			filename: 'index_bundle.js',
 			chunkFilename: '[id].js',
 			publicPath: './dist'
+		},
+		devServer: {
+		    historyApiFallback: {
+		    	index: 'index.html'
+		    },
 		},
 		module:{
 			rules: [
@@ -33,16 +36,24 @@ module.exports = ( env, options )=>
 				},
 				{
 					test: /\.html$/,
-					use: ['html-loader'] 
+					use: ['html-loader']
 				},
 				{
-					test: /\.(jpg|png)$/,
+					test: /\.(jpe?g|png|gif)$/i,
 					use: [
 						{
 							loader: 'file-loader',
 							options: {
 								name: '[name].[ext]',
-								outputPath: '/assets/img/'
+								publicPath: 'assets',
+								outputPath: (url, resourcePath, context) =>
+								{
+									const root = path.relative(context, resourcePath);
+									const subpath = root.substr(root.indexOf('assets'), root.length);
+									return subpath;
+								},
+								useRelativePath: true,
+								emitFile: true
 							}
 						}
 					]
@@ -63,7 +74,13 @@ module.exports = ( env, options )=>
 							loader: 'file-loader',
 							options: {
 								name: '[name].[ext]',
-								outputPath: '/assets/svg/'
+								publicPath: 'assets',
+								outputPath: (url, resourcePath, context) =>
+								{
+									const root = path.relative(context, resourcePath);
+									const subpath = root.substr(root.indexOf('assets'), root.length);
+									return subpath;
+								},
 							}
 						}
 					]
@@ -77,8 +94,13 @@ module.exports = ( env, options )=>
 								name: (file)=> {
 									return '[name].[ext]';
 								},
-								outputPath: '/assets/fonts/',
-								publicPath: 'assets'
+								publicPath: 'assets',
+								outputPath: (url, resourcePath, context) =>
+								{
+									const root = path.relative(context, resourcePath);
+									const subpath = root.substr(root.indexOf('assets'), root.length);
+									return subpath;
+								},
 							}
 						}
 					]
