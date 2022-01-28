@@ -1,0 +1,4 @@
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 25
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 25

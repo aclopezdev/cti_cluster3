@@ -428,15 +428,13 @@ MyAPI.backend = MyAPI.REQUEST_ENUM.FETCH;
 MyAPI.headers = true;
 
 const MyNet = {
-	// uri: MyAPI.debug ? "http://localhost/CTI/cti_cluster3/back/api/" : "https://aclcode.com/lab/ecomm/back/api",
+	uri: MyAPI.debug ? "http://localhost/CTI/cti_cluster3/back/api/" : "https://aclcode.com/lab/ecomm/back/api/index.php?pop="+Math.random(9999),
 	// uri: "https://aclcode.com/lab/ecomm/back/api",
-	uri: "http://localhost/CTI/cti_cluster3/back/api/",
+	// uri: "http://localhost/CTI/cti_cluster3/back/api/",
 	fetch: function(mod, cmd, cback, cback_error, args = {}) {
 		let headers = {
-			// "Content-Type": MyAPI.debug ? "application/x-www-form-urlencoded" : "application/json",
 			"Content-Type": "application/x-www-form-urlencoded",
-			// "Content-Type": "application/json",
-			// "Content-Type": "text/html; charset=UTF-8"
+			"Accept": '*/*'
 		};
 		const output = {
 			mod: mod,

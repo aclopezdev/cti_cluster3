@@ -1,0 +1,104 @@
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 25
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 07:35:25 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 25
+[28-Jan-2022 11:29:12 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:29:12 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:29:12 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 56
+[28-Jan-2022 11:29:36 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:29:36 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:29:36 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 55
+[28-Jan-2022 11:30:25 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:30:25 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:30:25 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 55
+[28-Jan-2022 11:30:28 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:30:28 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:30:28 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 55
+[28-Jan-2022 11:30:28 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:30:28 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:30:28 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 55
+[28-Jan-2022 11:30:36 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:30:36 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:30:36 America/New_York] PHP Parse error:  syntax error, unexpected '"SELECT `uid`, `first_name`, `' (T_CONSTANT_ENCAPSED_STRING) in /home/biiilbgf/public_html/lab/ecomm/back/api/mods/session.php on line 55
+[28-Jan-2022 11:31:13 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:31:13 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:31:13 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:31:51 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:31:51 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:31:51 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:32:29 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:32:29 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:32:29 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:33:53 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:33:53 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:33:53 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:34:21 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 27
+[28-Jan-2022 11:34:41 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:34:41 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function add_log() in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php:20
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php(7): MysqlDB->connect()
+#1 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once('/home/biiilbgf/...')
+#2 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 20
+[28-Jan-2022 11:34:41 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:34:41 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function add_log() in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php:20
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php(7): MysqlDB->connect()
+#1 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once('/home/biiilbgf/...')
+#2 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 20
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 26
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 26
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'biiilbgf_andrescamilo'@'50.31.174.99' (using password: YES) in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 19
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 26
+[28-Jan-2022 11:35:19 America/New_York] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/biiilbgf/public_html/lab/ecomm/back/conf/mysql/conn.php on line 26
+[28-Jan-2022 11:39:08 America/New_York] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:39:08 America/New_York] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:39:26 America/New_York] PHP Parse error:  syntax error, unexpected ',' in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:39:26 America/New_York] PHP Parse error:  syntax error, unexpected ',' in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:39:45 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:39:45 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:40:26 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:40:26 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:42:14 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:42:14 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:3
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 3
+[28-Jan-2022 11:43:02 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:5
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 5
+[28-Jan-2022 11:43:02 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php:5
+Stack trace:
+#0 /home/biiilbgf/public_html/lab/ecomm/back/api/index.php(15): include_once()
+#1 {main}
+  thrown in /home/biiilbgf/public_html/lab/ecomm/back/conf/conf.php on line 5

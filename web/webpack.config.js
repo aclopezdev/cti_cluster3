@@ -17,9 +17,12 @@ module.exports = ( env, options )=>
 			publicPath: './dist'
 		},
 		devServer: {
-		    historyApiFallback: {
-		    	index: 'index.html'
-		    },
+		    headers: {
+		      "Access-Control-Allow-Origin": "*",
+		      "Access-Control-Allow-Credentials": "true",
+		      "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+		      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+		    }
 		},
 		module:{
 			rules: [
@@ -68,7 +71,7 @@ module.exports = ( env, options )=>
 					}, 'css-loader']
 				},
 				{
-					test: /\.svg$/,
+					test: /\.svg$/i,
 					use: [
 						{
 							loader: 'file-loader',
@@ -81,12 +84,13 @@ module.exports = ( env, options )=>
 									const subpath = root.substr(root.indexOf('assets'), root.length);
 									return subpath;
 								},
+								emitFile: true
 							}
 						}
 					]
 				},
 				{
-					test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+					test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
 					use: [
 						{
 							loader: 'file-loader',

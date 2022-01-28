@@ -1,4 +1,65 @@
-.Login-main
+.Login-main > .Login-main
 {
-    
+	margin: 20px auto;
+    width: 300px;
+    min-width: 250px;
+    border-radius: 10px;
+    background-color: #DDD;
+}
+
+.Login-main > .Login-main > form
+{
+    padding: 5px 20px;	
+}
+
+.Login-main > .Login-main > form input[type='text'], .Login-main > .Login-main > form input[type='password']
+{
+	width: calc(100% - 10px - 14px);
+	font-size: 14pt;
+	padding: 10px;
+}
+
+.Login-main > .Login-main > form > div:last-child
+{
+	text-align: right;
+}
+
+.Login-main > .Login-main > form input[type='submit']
+{
+	margin: 10px auto;
+}
+
+
+.Login-main > .Login-main > form > .error-messages
+{
+	background-color: #fdb1b1;
+	border: solid 1px #F00;
+}
+
+
+
+.Login-main > .Login-main > div:first-child
+{
+	background-color: #2e3e40;
+	border-radius: 10px 10px 0 0;
+	padding: 15px;
+}
+
+.Login-main > .Login-main > div:first-child > p
+{
+	text-align: center;
+	color: #c8e8da;
+	margin: 0;
+}
+
+.Login-main > .Login-main > div:first-child > div
+{
+	display: flex;
+	justify-content: center;
+}
+
+.Login-main > .Login-main > div:first-child > div > img
+{
+	align-self: center;
+	width: 90%;
 }

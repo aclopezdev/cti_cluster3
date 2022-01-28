@@ -115,6 +115,7 @@ input[type='reset']
     background-color: #2e3e40;
     display: flex;
     justify-content: center;
+    z-index: 1001;
 }
 .loading-lbox > div
 {
@@ -169,7 +170,7 @@ input[type='reset']
 {
     margin: 5px 0px;
 }
-.capsule > div input[type='text'], .capsule > div select, .capsule > div textarea
+.capsule > div input[type='text'], .capsule > div input[type='password'], .capsule > div select, .capsule > div textarea
 {
     width: 100%;
     font-size: 12pt;
@@ -201,4 +202,16 @@ input[type='reset']
 .data_loader p
 {
     margin: 5px 0px;
+}
+
+
+.print-btn
+{
+    background-color: #2e3e40;
+    color: #0ebba4;
+}
+.print-btn:hover
+{
+    background-color: #0f796b;
+    color: #96d9d2;
 }

@@ -5,6 +5,7 @@ $_mods['session'] = [
     'checker' => function($args, $data)
     {
         global $output;
+        add_log('111111');
 
         $ip = get_user_ip();
         $browser = get_user_browser();
@@ -22,7 +23,7 @@ $_mods['session'] = [
             return;
         }
 
-        $user = $data['mysql']->query("SELECT `uid`, `first_name`, `last_name`, `email` FROM `users` WHERE `uid` = '".$session['uid_user']."' AND `status` = '1';");
+        $user = $data['mysql']->query("SELECT `uid`, `first_name`, `last_name`, `email`, `type` FROM `users` WHERE `uid` = '".$session['uid_user']."' AND `status` = '1';");
         $user = $data['mysql']->fetch2array($user);
         
         if(count($session) == 0)
@@ -37,7 +38,8 @@ $_mods['session'] = [
             'id' => substr($user['uid'], strlen($user['uid']) - 20, strlen($user['uid']) - 1),
             'first_name' => $user['first_name'],
             'last_name' => $user['last_name'],
-            'email' => $user['email']
+            'email' => $user['email'],
+            'USER-TYPE' => $user['type']
         );
     },
     'signup' => function($args, $data)
@@ -50,8 +52,10 @@ $_mods['session'] = [
     'login' => function($args, $data)
     {
         global $output;
-        $resp = $data['mysql']->query("SELECT `uid`, `first_name`, `last_name`, `email` FROM `users` WHERE `email` = '".$args['user']."' AND `password` = '".$args['pass']."' AND `status` = '1';");
-        $user = $data['mysql']->fetch2array($resp);
+
+        $user = "SELECT `uid`, `first_name`, `last_name`, `email` FROM `users` WHERE `email` = '".$args['user']."' AND `password` = '".$args['pass']."' AND `status` = '1';";
+        $user = $data['mysql']->query($user);
+        $user = $data['mysql']->fetch2array($user);
         
         if(count($user) == 0)
         {
@@ -71,6 +75,22 @@ $_mods['session'] = [
             $date_end = date($data['datetime_format'], strtotime($data['datetime_now'].' + '.$data['session_days'].' days')); 
             $data['mysql']->query("INSERT INTO `user_login` (`uid`, `uid_user`, `token`, `ip`, `browser`, `date_crea`, `date_end`, `status`) VALUES ('".uuid()."', '".$user['uid']."', '".$token."', '".$ip."', '".$browser."', '".$data['datetime_now']."', '".$date_end."', '1');");
         }
+    },
+    'logout' => function($args, $data)
+    {
+        global $output;
+
+        $ip = get_user_ip();
+        $browser = get_user_browser();
+        $session = [];
+        $id_query = '';
+        if(isset($args['id']))
+            $id_query = "`uid_user` LIKE '%".$args['id']."' AND `token` = '".$args['token']."' AND ";
+
+        $session = $data['mysql']->query("UPDATE `user_login` SET `status` = 0 WHERE ".$id_query." `ip` = '".$ip."' AND `browser` = '".$browser."' AND `date_crea` <= '".$data['datetime_now']."' AND `date_end` > '".$data['datetime_now']."' AND `status` = '1' ORDER BY `date_crea` DESC LIMIT 1;");
+
+        $output['logged'] = false;
+        $output['error'] = false;
     }
 ];
 

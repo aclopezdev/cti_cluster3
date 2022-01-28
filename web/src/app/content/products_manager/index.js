@@ -1,25 +1,26 @@
-const invoicing = require('./invoicing.js').Invoicing;
-const clients = require('./clients.js').Clients;
+import Rapp from '../../../vendor/relast.js';
+import Invoicing from './invoicing.js';
+import Clients from './clients.js';
 
-exports.Sales_Invoice = new Class({
-    Extends: Rapp,
-    initialize: function(args)
+export default class Sales_Invoice extends Rapp
+{
+    constructor(args)
     {
-        this.parent(args, this);
+        super(args);
 
-        this.add_comp('Invoicing', invoicing);
-        this.add_comp('Clients', clients);
-    },
-    run: function(props)
+        this.add_comp('Invoicing', Invoicing);
+        this.add_comp('Clients', Clients);
+    };
+    run = function(props)
     {
-    },
-    states: function(props)
+    };
+    states = function(props)
     {
-    },
-    actions: function(props)
+    };
+    actions = function(props)
     {
-    },
-    draw: function(props)
+    };
+    draw = function(props)
     {
         this.dom('main', ()=>
         {
@@ -33,4 +34,4 @@ exports.Sales_Invoice = new Class({
             );
         });
     }
-});
+}

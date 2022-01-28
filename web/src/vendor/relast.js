@@ -7,6 +7,7 @@ export default class Rapp{
 	_electron = null;
 	_props = {};
 	_comps = {};
+	_last_states = {};
 	_states = {};
 	_actions = {};
 	_dom = {};
@@ -24,6 +25,35 @@ export default class Rapp{
 				: args.bbox;
 		this._parent = args.parent || this;
 		this._main = args.main || this._parent;
+	};
+	nav = function(path)
+	{
+		if(!this._main._router) return;
+		const comp = this._main._router.nav(path, true);
+	};
+	get_IDsref = function(id, comp, buffer = [])
+	{
+		comp = comp || this;
+		if(this._wrappers.ids[id])
+			buffer.push(this._wrappers.ids[id]);
+		// for(let c in comp._comps)
+		// {
+		// 	if(!comp._comps.hasOwnProperty(c)) continue;
+		// 	const aux = comp._comps[c];
+		// 	if(comp._wrappers.ids[id])
+		// 	{
+		// 		let exist = false;
+		// 		for(let sc of buffer)
+		// 		{
+		// 			if(sc.el === comp._wrappers.ids[id])
+		// 				exist = true;
+		// 		}
+		// 		if(!exist)
+		// 			buffer.push({el: comp._wrappers.ids[id], comp: aux});
+		// 	}
+		// 	aux.get_IDsref(id, aux, buffer);
+		// }
+		return buffer;
 	};
 	title = function(title)
 	{
@@ -105,6 +135,8 @@ export default class Rapp{
 	state = function(k, v = null) {
 		if (v === null) return this._states[k];
 
+		if(this._states[k])
+			this._last_states[k] = this._states[k];
 		this._states[k] = v;
 		this.update_states();
 	};
@@ -168,7 +200,18 @@ export default class Rapp{
 						"text_attr",
 						a.value,
 						token,
-						{ attr: a.name }
+						{ attr: a.name },
+						this
+					);
+				}
+				if (this.has_textual_state(a.name)) {
+					this.index_textual_states(
+						node,
+						"attr_name",
+						a.name,
+						token,
+						{ attr: a.name },
+						this
 					);
 				}
 			}
@@ -201,33 +244,33 @@ export default class Rapp{
 		if (!k) return;
 		return this._wrappers.ids[k];
 	};
-	set_nav = function(path, conf, options = {}) {
-		this._main._nav[path] = {
-			path: path,
-			mod: conf.mod,
-			title: conf.title,
-			name: conf.name,
-		};
-	};
-	navigate = function(path, bbox, options = {}) {
-		if (!path || !bbox) return;
-		if (typeof path !== "string") return;
-		bbox = typeof bbox === "string" ? this._wrappers.ids[bbox] : bbox;
-		if (!bbox) return;
-		const obj = this._main._nav[path];
-		if (!obj) return;
-		const comp_name = obj.name.toUpperCase();
-		if (!this._main._comps[comp_name]) {
-			this._main.add_comp(comp_name, obj.mod, options);
-			if (!this._main._comps[comp_name]) return;
-			this._main._comps[comp_name]._bbox = bbox;
-			this._main._comps[comp_name].start(options);
-		}
-		this._main._comps[comp_name]._ran = false;
-		this._main._comps[comp_name].reset_all_comps();
-		this._main._comps[comp_name].render();
-		return obj;
-	};
+	// set_nav = function(path, conf, options = {}) {
+	// 	this._main._nav[path] = {
+	// 		path: path,
+	// 		mod: conf.mod,
+	// 		title: conf.title,
+	// 		name: conf.name,
+	// 	};
+	// };
+	// navigate = function(path, bbox, options = {}) {
+	// 	if (!path || !bbox) return;
+	// 	if (typeof path !== "string") return;
+	// 	bbox = typeof bbox === "string" ? this._wrappers.ids[bbox] : bbox;
+	// 	if (!bbox) return;
+	// 	const obj = this._main._nav[path];
+	// 	if (!obj) return;
+	// 	const comp_name = obj.name.toUpperCase();
+	// 	if (!this._main._comps[comp_name]) {
+	// 		this._main.add_comp(comp_name, obj.mod, options);
+	// 		if (!this._main._comps[comp_name]) return;
+	// 		this._main._comps[comp_name]._bbox = bbox;
+	// 		this._main._comps[comp_name].start(options);
+	// 	}
+	// 	this._main._comps[comp_name]._ran = false;
+	// 	this._main._comps[comp_name].reset_all_comps();
+	// 	this._main._comps[comp_name].render();
+	// 	return obj;
+	// };
 	reset_all_comps = function() {
 		for (let c in this._comps) {
 			this._comps[c].reset_all_comps();
@@ -297,7 +340,7 @@ export default class Rapp{
 	extract_textual_state = function(v) {
 		return v.replace("[state:", "").replace("]", "");
 	};
-	index_state = function(state, node, type, token, addons = {}) {
+	index_state = function(state, node, type, token, addons = {}, comp = null) {
 		if (!this._wrappers.indexers[token]) {
 			const base_node = document.importNode(node);
 			this._wrappers.indexers[token] = {
@@ -307,17 +350,18 @@ export default class Rapp{
 				states: [],
 				addons: addons,
 				state: state,
+				comp: comp
 			};
 		}
-		if (!this._wrappers.indexers[token].states.includes(state))
-			this._wrappers.indexers[token].states.push(state);
+		if (!this._wrappers.indexers[token].states.includes({type: type, state: state}))
+			this._wrappers.indexers[token].states.push({type: type, state: state});
 	};
-	index_textual_states = function(node, type, value_eval, token, addons = {}) {
+	index_textual_states = function(node, type, value_eval, token, addons = {}, comp = null) {
 		const states = this.get_textual_states(value_eval);
 		if (!states) return;
 		for (let s of states) {
 			const state = this.extract_textual_state(s);
-			this.index_state(state, node, type, token, addons);
+			this.index_state(state, node, type, token, addons, comp);
 		}
 	};
 	update_states = function() {
@@ -326,35 +370,58 @@ export default class Rapp{
 			if (!indexers.hasOwnProperty(i)) continue;
 			const token = i;
 			const data = indexers[i];
+
 			let value = "";
 			if (data.base_node) {
 				if (data.type === "text") value = data.base_node.nodeValue;
 				else if (data.type === "text_attr") {
 					value = data.base_node.attributes[data.addons.attr].value;
+				}else if(data.type === 'attr_name')
+				{
+					value = data.base_node.attributes[data.addons.attr].name;
 				}
 			}
 
 			for (let s of data.states) {
-				if (data.type === "text" || data.type === "text_attr") {
+				if (s.type === "text" || s.type === "text_attr") {
 					value = value.replace(
-						`[state:${s}]`,
-						this._states[s] !== undefined ||
-						this._states[s] !== null
-							? this._states[s]
+						`[state:${s.state}]`,
+						this._states[s.state] !== undefined ||
+						this._states[s.state] !== null
+							? this._states[s.state]
 							: "[no-value]"
 					);
-				} else if (data.type === "attr")
-					value = this._states[s] || "[no-value]";
-			}
+				} else if (s.type === 'attr_name')
+				{
+					value = this._states[s.state];
+				} else if (s.type === "attr"){
+					value = this._states[s.state] || "[no-value]";
+				}
 
-			if (data.type === "text") data.final_node.nodeValue = value;
-			if (data.type === "text_attr") {
-				if (data.final_node.attributes[data.addons.attr]) {
-					data.final_node.attributes[data.addons.attr].value = value;
-				} else if (data.addons.attr.toLowerCase() === "value")
-					data.final_node.value = value;
-			} else if (data.type === "attr")
-				data.final_node.setAttribute(data.addons.attr, value);
+				if (s.type === "text") data.final_node.nodeValue = value;
+				if (s.type === "text_attr") {
+					if (data.final_node.attributes[data.addons.attr]) {
+						data.final_node.attributes[data.addons.attr].value = value;
+						if(data.final_node.tagName.toLowerCase() === 'select')
+						{
+							console.log(value);
+							data.final_node.value = value;
+						}
+					} else if (data.addons.attr.toLowerCase() === "value"){
+						data.final_node.value = value;
+					}
+				} else if (s.type === "attr"){
+					data.final_node.setAttribute(data.addons.attr, value);
+				} else if(s.type === 'attr_name')
+				{
+					data.final_node.removeAttribute(`[state:${s.state}]`);
+					if(this._last_states[s.state])
+						if(data.final_node.hasAttribute(this._last_states[s.state]))
+							data.final_node.removeAttribute(`${this._last_states[s.state]}`);
+					if(value === 'undefined' || value === undefined || value === null || value.trim() === '') continue;
+					data.final_node.setAttribute(value, '');
+				}
+			}
 		}
 	};
 	add_comp = function(k, comp, options = {}) {
@@ -408,3 +475,19 @@ Rapp.obj_length = obj => {
 	for (let o in obj) if (obj.hasOwnProperty(o)) c++;
 	return c;
 };
+Rapp.isMobile = () =>{
+	const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+    ];
+    
+    return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+    });
+    return false;
+}

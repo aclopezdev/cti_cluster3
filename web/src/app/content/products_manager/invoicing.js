@@ -1,9 +1,12 @@
-exports.Invoicing = new Class({
-	Extends: Rapp,
-	initialize: function(args) {
-		this.parent(args, this);
-	},
-	run: function(props) {
+import Rapp from '../../../vendor/relast.js';
+
+export default class Invoicing extends Rapp
+{
+	constructor(args)
+	{
+		super(args);
+	};
+	run = function(props) {
 		this.render({ dom: "capsule", bbox: "invoice-content" });
 		if (Rapp.obj_length(this.state("basket")) > 0)
 		{
@@ -12,8 +15,8 @@ exports.Invoicing = new Class({
 		}else{
 			this.call_action('show_invoice_list');
 		}
-	},
-	states: function(props) {
+	};
+	states = function(props) {
 		this.state("client_finder", "");
 		this.state("product_finder", "");
 		this.state("client_selected", "");
@@ -22,8 +25,8 @@ exports.Invoicing = new Class({
 		this.state("basket_count", 0);
 		this.state("basket_total_count", 0);
 		this.state("basket_total_price", 0);
-	},
-	actions: function(props) {
+	};
+	actions = function(props) {
 		this.action("show_client_finder", () => {
 			this.render({
 				dom: "client_finder",
@@ -177,7 +180,7 @@ exports.Invoicing = new Class({
 
 					let basket = this.state("basket");
 					if (!basket[id]) {
-						stock_data = {};
+						let stock_data = {};
 						for (let s of args) {
 							if (s["ID"] !== id) continue;
 							stock_data = s;
@@ -225,6 +228,33 @@ exports.Invoicing = new Class({
 			});
 		});
 
+		this.action('show_document_invoice', (args)=>
+		{
+			const sale = args.sale;
+			this.render({
+				dom: 'view-document-invoice',
+				bbox: `${this._name}-capsule-section`,
+				params: args.sale
+			});
+		});
+
+		this.action('print-invoice-document', ()=>
+		{
+			var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+		    mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+		    mywindow.document.write('</head><body >');
+		    mywindow.document.write('<h1>' + document.title  + '</h1>');
+		    mywindow.document.write(document.getElementById(`${this._name}-print-invoice`).innerHTML);
+		    mywindow.document.write('</body></html>');
+
+		    mywindow.document.close(); // necessary for IE >= 10
+		    mywindow.focus(); // necessary for IE >= 10*/
+
+		    mywindow.print();
+		    mywindow.close();
+		});
+
 		this.action("show_invoice_list", () => {
 			this.render({
 				dom: "loading",
@@ -253,6 +283,7 @@ exports.Invoicing = new Class({
 					columns: res.titles
 				});
 
+				this.call_action('view-invoice-btn-click')
 				this.call_action('toggle-btn-clik');
 			});
 		});
@@ -274,6 +305,28 @@ exports.Invoicing = new Class({
 					MyAPI.toggle_invoice({id: id}, (res)=>
 					{
 						this.call_action('show_invoice_list');
+					});
+				}
+			}
+		});
+
+		this.action('view-invoice-btn-click', ()=>
+		{
+			const btns = document.getElementsByClassName('view-invoice-btn');
+			for(let btn of btns)
+			{
+				btn.onclick = ()=>
+				{
+					this.render({
+						dom: "loading",
+						bbox: `${this._name}-capsule-section`,
+						params: 'Loading invoice info...'
+					});
+
+					const id = btn.getAttribute('key');
+					MyAPI.view_invoice({id: id}, (res)=>
+					{
+						this.call_action('show_document_invoice', res);
 					});
 				}
 			}
@@ -364,8 +417,8 @@ exports.Invoicing = new Class({
 				}
 			});
 		});
-	},
-	draw: function(props) {
+	};
+	draw = function(props) {
 		this._dom.green_flag = `<div class='green-flag'></div>`;
 		this._dom.red_flag = `<div class='red-flag'></div>`;
 
@@ -382,6 +435,9 @@ exports.Invoicing = new Class({
 		});
 
 		this.dom("toggle_btn", (id, state) => {
+            const session_comp = this.looking_comp(`${this._main._name}/Session`);
+            if(session_comp.state('user_data')['USER-TYPE'] !== '0') return '';
+
 			return `<button key='${id}' class='toggle-invoice-btn'>${state}</button>`;
 		});
 
@@ -521,6 +577,51 @@ exports.Invoicing = new Class({
 			return `<div class='data_loader'><p>${message}</p><img src='assets/preloaders/windows8_2.svg' /></div>`;
 		});
 
+		this.dom('view-document-invoice', args =>
+			{
+				let prods = ``;
+				let total_amount = 0;
+				for(let p of args.prods)
+				{
+					prods += `<tr>
+						<td>${p.['PROD-NAME']}</td>
+						<td>${p.['PROD-DESC']}</td>
+						<td>${p.['PROD-MOUNT']} units</td>
+						<td>$${p.['PROD-PRICE']}</td>
+						<td>$${parseFloat(p.['PROD-PRICE']) * parseFloat(p.['PROD-MOUNT'])}</td>
+					</tr>`;
+					total_amount += parseFloat(p.['PROD-MOUNT']);
+				}
+				let invoice_id = args.invoice['ID'];
+				invoice_id = invoice_id.substr(invoice_id.length - 7, invoice_id.length - 1);
+				let client_id = args.invoice['CLIENT-ID'];
+				client_id = client_id.substr(client_id.length - 7, client_id.length - 1);
+				return `<div class='${this._name}-invoice-document' id='${this._name}-print-invoice'>
+					<h2>Invoice document #${invoice_id}</h2>
+					<p>Sale date: ${args.invoice['SALE-DATE']}</p>
+					<p>Client: ${args.invoice['CLIENT-NAME']} - #${client_id}</p>
+					<table>
+						<tr>
+							<th>Product</th>
+							<th>Decription</th>
+							<th>Amount</th>
+							<th>Price</th>
+							<th>Total</th>
+						</tr>
+						${prods}
+						<tr>
+							<td colspan='2'></td>
+							<td>${total_amount} units</td>
+							<td></td>
+							<td>$${args.invoice.TOTAL}</td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<button onclick='print-invoice-document' class='print-btn'>Print this document...</button>
+				</div>`;
+			});
+
 		this.dom("capsule", args => {
 			return `<div class='capsule'>
                     <h1>${args.title || "Invoices"}</h1>
@@ -529,10 +630,12 @@ exports.Invoicing = new Class({
 		});
 
 		this.dom("main", () => {
+            const session_comp = this.looking_comp(`${this._main._name}/Session`);
+
 			return `<section class='content'>
                     <div class='tool-box'>
                         <button onclick='show_invoice_list'>Invoices</button>
-                        <button onclick='show_new_invoice'>New Invoice</button>
+                        ${session_comp.state('user_data')['USER-TYPE'] !== '0' ? "" : "<button onclick='show_new_invoice'>New Invoice</button>"}
                     </div>
                     <div id='invoice-content'></div>
                 </section>`;
@@ -550,6 +653,21 @@ exports.Invoicing = new Class({
         .preview-basket table tr:nth-child(even)
         {
             background-color: #DDD;
+        }
+        .${this._name}-invoice-document table
+        {
+        	width: 100%;
+        	border-collapse: collapse;
+        	border: solid 1px #CCC;
+        }
+        .${this._name}-invoice-document table td
+        {
+        	padding: 5px;
+        }
+        .${this._name}-invoice-document table tr:nth-child(even)
+        {
+        	background-color: #CCC;
         }`;
-	},
-});
+	}
+}
+

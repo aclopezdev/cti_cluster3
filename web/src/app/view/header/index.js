@@ -1,32 +1,32 @@
-exports.Header = new Class(
-    {
-        Extends: Rapp,
-        initialize: function(args)
-        {
-            this.parent(args, this);
-        },
-        run: function(props)
-        {
-            // THIS METHOD RUN WHEN THE RENDER FINISH
-        },
-        states: function(props)
-        {
-        },
-        actions: function(props)
-        {
-        },
-        draw: function(props)
-        {
-            //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
+import Rapp from '../../../vendor/relast.js';
 
-            this.dom('main', ()=>
-            {
-                return (
-                    `<section class='dflex dflex-wrap justifyc-center'>
-                        <h1>Ecom</h1>
-                    </section>`
-                );
-            });
-        }
+export default class Header extends Rapp
+{
+    constructor(args)
+    {
+        super(args);
+    };
+    run = function(props)
+    {
+        // THIS METHOD RUN WHEN THE RENDER FINISH
+    };
+    states = function(props)
+    {
+    };
+    actions = function(props)
+    {
+    };
+    draw = function(props)
+    {
+        //this._dom.iterator.test = `<a href='javascript:;'>item [k]</a>`;
+
+        this.dom('main', ()=>
+        {
+            return (
+                `<section class='dflex dflex-wrap justifyc-center'>
+                    <img src='assets/images/logo.svg' class='header-logo' />
+                </section>`
+            );
+        });
     }
-);
+}

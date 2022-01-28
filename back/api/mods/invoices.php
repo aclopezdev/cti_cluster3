@@ -86,6 +86,42 @@ $_mods['invoices'] = [
         $update = $data['mysql']->query($update);
 
         $output['error'] =  false;
+    },
+    'view_invoice' => function($args, $data)
+    {
+        global $output;
+
+        $uid = $args['sale_id'];
+        $sales = "SELECT `s`.`uid` AS 'SALE-ID', `c`.`uid` AS 'CLIENT-ID', `s`.`total_price` AS 'TOTAL', `s`.`date_crea` AS 'DATE', `i`.`uid` AS 'INVOICE-ID', CONCAT(`c`.`first_name`, ' ', `c`.`last_name`) AS 'CLIENT-NAME', `i`.`amount` AS 'PROD-MOUNT', `p`.`name` as 'PROD-NAME', `p`.`desc` as 'PROD-DESC', `p`.`price` AS 'PROD-PRICE' FROM `sales` AS `s` INNER JOIN `clients` AS `c` ON `c`.`uid` = `s`.`uid_client` INNER JOIN `invoices` AS `i` ON `i`.`uid_sale` = `s`.`uid` INNER JOIN `stock` AS `p` ON `p`.`uid` = `i`.uid_product WHERE `s`.`uid` = '".$uid."';";
+        $sales = $data['mysql']->query($sales);
+        $sales = $data['mysql']->fetch2buffer($sales);
+
+        $invoice = [];
+        $prods = [];
+
+        if(count($sales) > 0)
+        {
+            $invoice = [
+                'ID' => $sales[0]['SALE-ID'],
+                'CLIENT-ID' => $sales[0]['CLIENT-ID'],
+                'CLIENT-NAME' => $sales[0]['CLIENT-NAME'],
+                'SALE-DATE' => $sales[0]['DATE'],
+                'INVOICE-ID' => $sales[0]['INVOICE-ID'],
+                'TOTAL' => $sales[0]['TOTAL']
+            ];
+            foreach ($sales as $key => $value) 
+            {
+                $prod = [
+                    'PROD-NAME' => $value['PROD-NAME'],
+                    'PROD-DESC' => $value['PROD-DESC'],
+                    'PROD-MOUNT' => $value['PROD-MOUNT'],
+                    'PROD-PRICE' => $value['PROD-PRICE']
+                ];
+                array_push($prods, $prod);
+            }
+        }
+
+        $output['sale'] = ['invoice' => $invoice, 'prods' => $prods];
     }
 ];
 

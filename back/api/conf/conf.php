@@ -15,11 +15,10 @@ $_data = [
 $_mods = [];
 
 
-
 $session_conf = $_data['mysql']->query("SELECT `value` FROM `login_config` WHERE `name` = 'user_session_time';");
 $session_conf = $_data['mysql']->fetch2array($session_conf);
-$_data['session_days'] = $session_conf['value'];
 
+$_data['session_days'] = $session_conf['value'];
 
 
 function add_log($txt)

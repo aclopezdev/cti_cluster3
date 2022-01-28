@@ -1,21 +1,25 @@
-exports.Clients = new Class({
-	Extends: Rapp,
-	initialize: function(args) {
-		this.parent(args, this);
-	},
-	run: function(props) {
+import Rapp from '../../../vendor/relast.js';
+
+export default class Clients extends Rapp
+{
+	constructor(args)
+	{
+		super(args);
+	};
+
+	run = function(props) {
 		this.render({ dom: "capsule", bbox: "client-content" });
 		this.call_action("load_clients");
-	},
-	states: function(props) {
+	};
+	states = function(props) {
 		this.state("response", "");
 		this.state("client_id", "");
 		this.state("client_first_name", "");
 		this.state("client_last_name", "");
 		this.state("client_address", "");
 		this.state("client_phone", "");
-	},
-	actions: function(props) {
+	};
+	actions = function(props) {
 		this.action("load_clients", () => {
 			this.render({
 				dom: "loading",
@@ -201,15 +205,21 @@ exports.Clients = new Class({
 		this.action("keyup_phone", e => {
 			this.state("client_phone", e.target.value);
 		});
-	},
-	draw: function(props) {
+	};
+	draw = function(props) {
 		this._dom.green_flag = `<div class='green-flag'></div>`;
 		this._dom.red_flag = `<div class='red-flag'></div>`;
 
 		this.dom("edit_btn", id => {
+            const session_comp = this.looking_comp(`${this._main._name}/Session`);
+            if(session_comp.state('user_data')['USER-TYPE'] !== '0') return '';
+
 			return `<button key='${id}' class='client-edit-btn'>Edit</button>`;
 		});
 		this.dom("remove_btn", (id, state) => {
+            const session_comp = this.looking_comp(`${this._main._name}/Session`);
+            if(session_comp.state('user_data')['USER-TYPE'] !== '0') return '';
+
 			return `<button key='${id}' class='client-remove-btn'>${state}</button>`;
 		});
 
@@ -263,13 +273,15 @@ exports.Clients = new Class({
 		});
 
 		this.dom("main", () => {
+            const session_comp = this.looking_comp(`${this._main._name}/Session`);
+
 			return `<section class='content'>
                     <div class='tool-box'>
                         <button onclick='click_clients_btn'>Clients</button>
-                        <button onclick='click_add_client_btn'>Add client</button>
+                        ${session_comp.state('user_data')['USER-TYPE'] !== '0' ? '' : "<button onclick='click_add_client_btn'>Add client</button>"}
                     </div>
                     <div id='client-content'></div>
                 </section>`;
 		});
-	},
-});
+	}
+}

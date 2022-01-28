@@ -16,6 +16,13 @@ $_local_db = array(
     'pass' => '',
     'db' => 'cti_ecom'
 );
+$_local_db2 = array(
+    'host' => 'localhost',
+    'port' => '3306',
+    'user' => 'biiilbgf_andrescamilo',
+    'pass' => ',V!QDGC3+696',
+    'db' => 'biiilbgf_cti_ecom'
+);
 $_remote_db = array(
     'host' => '50.31.174.101',
     'port' => '3306',
